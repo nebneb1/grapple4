@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample"
+
+[deps]
+
+source_file="res://TankGameSFX-PURCHASE - Copy.wav"
+dest_files=[ "res://.import/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
