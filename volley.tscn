@@ -1,165 +1,394 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=14 format=3 uid="uid://c1jf2gn6boagl"]
 
-[ext_resource path="res://player.tscn" type="PackedScene" id=1]
-[ext_resource path="res://UI.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Ball.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Group 3.png" type="Texture" id=4]
-[ext_resource path="res://game_manager.gd" type="Script" id=5]
-[ext_resource path="res://goal.tscn" type="PackedScene" id=6]
-[ext_resource path="res://circ.png" type="Texture" id=7]
-[ext_resource path="res://A_black_image.jpeg" type="Texture" id=9]
+[ext_resource type="PackedScene" uid="uid://cjijvj61nnjs8" path="res://player.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://c25lb3gf7d5q8" path="res://UI.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://do4e5dslwsx2a" path="res://Ball.tscn" id="3"]
+[ext_resource type="Texture2D" uid="uid://he3c5rqt516h" path="res://Group 3.png" id="4"]
+[ext_resource type="Script" path="res://game_manager.gd" id="5"]
+[ext_resource type="PackedScene" path="res://goal.tscn" id="6"]
+[ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="7"]
+[ext_resource type="Texture2D" uid="uid://boi4xg2u3kni5" path="res://A_black_image.jpeg" id="9"]
 
-[sub_resource type="Curve" id=1]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+[sub_resource type="Animation" id="8"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:rotation_degrees")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:x")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:position:y")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
 
-[sub_resource type="Curve" id=2]
-_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+[sub_resource type="Animation" id="9"]
+resource_name = "flyout"
+length = 1.5
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:position:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:rotation_degrees")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mx1mh"]
+_data = {
+"RESET": SubResource("8"),
+"flyout": SubResource("9")
+}
+
+[sub_resource type="Curve" id="1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [node name="Node2D" type="Node2D"]
-script = ExtResource( 5 )
+script = ExtResource("5")
 
-[node name="Control" parent="." instance=ExtResource( 2 )]
+[node name="Control" parent="." instance=ExtResource("2")]
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Node2D" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1920, 1620 )
+[node name="Node2D" parent="." instance=ExtResource("3")]
+position = Vector2(1920, 1620)
 gravity_scale = 0.0
 
-[node name="player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 600, 500 )
+[node name="player" parent="." instance=ExtResource("1")]
 z_index = -1
+position = Vector2(600, 500)
 player_num = 2
 id = 2
 has_paddle = true
 
-[node name="player2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 600, 1660 )
+[node name="player2" parent="." instance=ExtResource("1")]
+position = Vector2(600, 1660)
 player_num = 1
 id = 1
 has_paddle = true
 
-[node name="player3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 3240, 500 )
+[node name="player3" parent="." instance=ExtResource("1")]
+position = Vector2(3240, 500)
 id = 0
 team = 1
 has_paddle = true
 
-[node name="player4" parent="." instance=ExtResource( 1 )]
-position = Vector2( 3240, 1660 )
+[node name="player4" parent="." instance=ExtResource("1")]
+position = Vector2(3240, 1660)
 player_num = 3
 id = 3
 team = 1
 has_paddle = true
 
 [node name="walls" type="Node2D" parent="."]
-scale = Vector2( 2, 2 )
+scale = Vector2(2, 2)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="walls"]
 collision_layer = 3
 collision_mask = 3
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls/StaticBody2D"]
-polygon = PoolVector2Array( 42.5, 1067.5, 43, 263.5, 49.5, 246.5, 301.5, 18.5, 317.5, 13.5, 359, 13.5, 1599.5, 13.5, 1617.5, 18, 1632, 30.5, 1869.5, 247, 1875, 253, 1877.5, 261.5, 1877.5, 286, 1877.5, 1415, 1865.5, 1641, 1034, 1598.5, 1039, 1401.5, 1037.5, 1070, 1002.5, 1046.5, 917, 1046.5, 882, 1070, 885, 1943, 40.5, 1574, 42.5, 1071, -53, 1073.5, -81.5, 2031.5, 2208.5, 2036.5, 2179.5, -252, -377.5, -275.5, -102.5, 1023 )
+polygon = PackedVector2Array(42.5, 1067.5, 43, 263.5, 49.5, 246.5, 301.5, 18.5, 317.5, 13.5, 359, 13.5, 1599.5, 13.5, 1617.5, 18, 1632, 30.5, 1869.5, 247, 1875, 253, 1877.5, 261.5, 1877.5, 286, 1877.5, 1415, 1865.5, 1641, 1034, 1598.5, 1039, 1401.5, 1037.5, 1070, 1002.5, 1046.5, 917, 1046.5, 882, 1070, 885, 1943, 40.5, 1574, 42.5, 1071, -53, 1073.5, -81.5, 2031.5, 2208.5, 2036.5, 2179.5, -252, -377.5, -275.5, -102.5, 1023)
 
-[node name="Sprite" type="Sprite" parent="walls"]
-position = Vector2( 960, 540 )
-scale = Vector2( 0.5, 0.5 )
+[node name="Sprite2D" type="Sprite2D" parent="walls"]
 z_index = -4
-texture = ExtResource( 4 )
+position = Vector2(960, 540)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2( 1920, 1080 )
-current = true
-zoom = Vector2( 2, 2 )
+position = Vector2(1920, 1080)
+zoom = Vector2(0.5, 0.5)
 
-[node name="ABlackImage" type="Sprite" parent="Camera2D"]
-position = Vector2( 1888, 1388 )
-scale = Vector2( 0.171875, 1.43125 )
-texture = ExtResource( 9 )
+[node name="ABlackImage" type="Sprite2D" parent="Camera2D"]
+position = Vector2(1888, 1388)
+scale = Vector2(0.171875, 1.43125)
+texture = ExtResource("9")
 
-[node name="ABlackImage4" type="Sprite" parent="Camera2D"]
-position = Vector2( -1889, 1401 )
-scale = Vector2( 0.171875, 1.43125 )
-texture = ExtResource( 9 )
+[node name="ABlackImage4" type="Sprite2D" parent="Camera2D"]
+position = Vector2(-1889, 1401)
+scale = Vector2(0.171875, 1.43125)
+texture = ExtResource("9")
 
-[node name="ABlackImage3" type="Sprite" parent="Camera2D"]
-position = Vector2( -0.499964, 1392.75 )
-scale = Vector2( 0.485937, 1.38646 )
-texture = ExtResource( 9 )
+[node name="ABlackImage3" type="Sprite2D" parent="Camera2D"]
+position = Vector2(-0.499964, 1392.75)
+scale = Vector2(0.485937, 1.38646)
+texture = ExtResource("9")
 
-[node name="ABlackImage2" type="Sprite" parent="Camera2D"]
+[node name="ABlackImage2" type="Sprite2D" parent="Camera2D"]
 visible = false
-position = Vector2( 0, -1423 )
-scale = Vector2( 6, 1.43125 )
 z_index = -2
-texture = ExtResource( 9 )
+position = Vector2(0, -1423)
+scale = Vector2(6, 1.43125)
+texture = ExtResource("9")
 
 [node name="Node2D" type="Node2D" parent="Camera2D"]
 z_index = -3
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/Node2D"]
-margin_left = -1834.0
-margin_top = 944.0
-margin_right = -156.0
-margin_bottom = 2807.0
-color = Color( 0.85098, 0.85098, 0.85098, 1 )
+offset_left = -1834.0
+offset_top = 944.0
+offset_right = -156.0
+offset_bottom = 2807.0
+color = Color(0.85098, 0.85098, 0.85098, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="Camera2D/Node2D"]
-margin_left = 156.0
-margin_top = 1008.0
-margin_right = 1834.0
-margin_bottom = 2871.0
-color = Color( 0.85098, 0.85098, 0.85098, 1 )
+offset_left = 156.0
+offset_top = 1008.0
+offset_right = 1834.0
+offset_bottom = 2871.0
+color = Color(0.85098, 0.85098, 0.85098, 1)
 
 [node name="ColorRect3" type="ColorRect" parent="Camera2D/Node2D"]
-margin_left = -3062.0
-margin_top = -2949.0
-margin_right = 2122.0
-margin_bottom = -1086.0
-color = Color( 0, 0, 0, 1 )
+offset_left = -3062.0
+offset_top = -2949.0
+offset_right = 2122.0
+offset_bottom = -1086.0
+color = Color(0, 0, 0, 1)
 
-[node name="team_left" parent="." instance=ExtResource( 6 )]
-position = Vector2( 936, 2359 )
+[node name="team_left" parent="." instance=ExtResource("6")]
+position = Vector2(936, 2359)
 rotation = 4.71239
 
-[node name="team_right" parent="." instance=ExtResource( 6 )]
-position = Vector2( 2866, 2361 )
+[node name="team_right" parent="." instance=ExtResource("6")]
+position = Vector2(2866, 2361)
 rotation = 1.5708
-scale = Vector2( -1, 1 )
+scale = Vector2(-1, 1)
 team_num = 2
 
 [node name="CollisionShape2D" parent="team_right" index="0"]
-position = Vector2( -0.250488, -14 )
+position = Vector2(-0.250488, -14)
+
+[node name="speednode" parent="team_right" index="2"]
+position = Vector2(0, 0)
+rotation = 0.0
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Speed" parent="team_right/speednode" index="0"]
+modulate = Color(0, 0, 0, 0)
+
+[node name="AnimationPlayer" parent="team_right/speednode" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_mx1mh")
+}
 
 [node name="transition" type="CPUParticles2D" parent="."]
-pause_mode = 2
-position = Vector2( 1920, 1080 )
+process_mode = 3
 z_index = 10
+position = Vector2(1920, 1080)
 emitting = false
 amount = 100
 lifetime = 2.0
 one_shot = true
 explosiveness = 1.0
-texture = ExtResource( 7 )
+texture = ExtResource("7")
 emission_shape = 2
-emission_rect_extents = Vector2( 1920, 1080 )
-gravity = Vector2( 0, 0 )
-scale_amount_curve = SubResource( 1 )
+emission_sphere_radius = 1.0
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("1")
 
 [node name="transitionout" type="CPUParticles2D" parent="."]
-pause_mode = 2
-modulate = Color( 0, 0, 0, 1 )
-position = Vector2( 1920, 1080 )
+process_mode = 3
+modulate = Color(0, 0, 0, 1)
 z_index = 10
+position = Vector2(1920, 1080)
 emitting = false
 amount = 100
 lifetime = 4.0
 one_shot = true
 explosiveness = 1.0
 lifetime_randomness = 0.25
-texture = ExtResource( 7 )
+texture = ExtResource("7")
 emission_shape = 2
-emission_rect_extents = Vector2( 1920, 1080 )
-gravity = Vector2( 0, 0 )
-scale_amount_curve = SubResource( 2 )
+emission_sphere_radius = 1.0
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("2")
 
 [editable path="team_right"]

@@ -1,7 +1,7 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
 
-onready var player = get_parent()
+@onready var player = get_parent()
 var id = 0 # set by parent
 const ACCEL = 15.0
 const DEADZONE = 0.3
@@ -19,10 +19,12 @@ func _ready():
 func _physics_process(delta):
 	if not player.disabled:
 		var aim: Vector2
-		aim.x = Input.get_joy_axis(id, 2)
-		aim.y = Input.get_joy_axis(id, 3)
-	#	aim.x = int(Input.is_action_pressed("right"))-int(Input.is_action_pressed("left"))
-	#	aim.y = int(Input.is_action_pressed("down"))-int(Input.is_action_pressed("up"))
+		if player.id != 4:
+			aim.x = Input.get_joy_axis(id, 2)
+			aim.y = Input.get_joy_axis(id, 3)
+		else:
+			aim.x = int(Input.is_action_pressed("aright"))-int(Input.is_action_pressed("aleft"))
+			aim.y = int(Input.is_action_pressed("adown"))-int(Input.is_action_pressed("aup"))
 	#	rotation = lerp(rotation, atan2(aim.y, aim.x) + PI/2, delta*ACCEL/2)
 	#	rotation = lerp(rotation, rotation+get_angle_to(aim)*10, delta*ACCEL)
 	#	rotation = atan2(aim.y, aim.x) + PI/2

@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample"
+type="AudioStreamWAV"
+uid="uid://bhlq0e056a811"
+path="res://.godot/imported/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample"
 
 [deps]
 
 source_file="res://TankGameSFX-PURCHASE - Copy.wav"
-dest_files=[ "res://.import/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample" ]
+dest_files=["res://.godot/imported/TankGameSFX-PURCHASE - Copy.wav-4bece620c0b9fcc61fd5a92f86cc9474.sample"]
 
 [params]
 

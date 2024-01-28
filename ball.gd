@@ -11,15 +11,18 @@ var color := Color(0,0,0)
 var hit_color = Color(0.0, 0.75, 0.75, 1)
 var kick_color = Color(0.75, 0.0, 0.75, 1)
 var grav_scale = gravity_scale
-var draw := true
+var drawing := true
 var can_kick := false
 
 func _ready():
 	Global.ball = self
 	$CollisionShape2D.shape.radius = radius
-	$CPUParticles2D.scale_amount /= Global.SCALE
-	$CPUParticles2D2.scale_amount /= Global.SCALE 
-	$CPUParticles2D2.initial_velocity /= Global.SCALE 
+	$CPUParticles2D.scale_amount_min /= Global.SCALE
+	$CPUParticles2D.scale_amount_max /= Global.SCALE
+	$CPUParticles2D2.scale_amount_min /= Global.SCALE 
+	$CPUParticles2D2.scale_amount_max /= Global.SCALE 
+	$CPUParticles2D2.initial_velocity_min /= Global.SCALE
+	$CPUParticles2D2.initial_velocity_max /= Global.SCALE 
 	if not Global.GRAVITY: 
 		linear_damp = Global.BASE_DAMP
 	
@@ -64,8 +67,8 @@ func _process(delta):
 			$CPUParticles2D2.direction = linear_velocity.normalized()
 			$CPUParticles2D2.emitting = true
 		
-	update()
-	if not draw:
+	queue_redraw()
+	if not drawing:
 		$CPUParticles2D.emitting = false
 		$CPUParticles2D2.emitting = false
 
@@ -82,17 +85,17 @@ func _physics_process(delta):
 	
 
 func _draw():
-	if draw:
+	if drawing:
 		draw_circle(Vector2.ZERO, radius, color)
 		if can_hit:
 			can_hit = false
 			if can_kick and Global.SOCCAR_MODE:
 				for i in range(8):
 					if i%2 == 0:
-						draw_arc(Vector2.ZERO, radius+10, deg2rad(i*360.0/8+circle_rotation*2), deg2rad((i+1)*360.0/8+circle_rotation*2), 10, kick_color, 3, true)
+						draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation*2), deg_to_rad((i+1)*360.0/8+circle_rotation*2), 10, kick_color, 3, true)
 			else:
 				for i in range(8):
 					if i%2 == 0:
-						draw_arc(Vector2.ZERO, radius+10, deg2rad(i*360.0/8+circle_rotation), deg2rad((i+1)*360.0/8+circle_rotation), 10, hit_color, 3, true)
+						draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation), deg_to_rad((i+1)*360.0/8+circle_rotation), 10, hit_color, 3, true)
 				
 			hit_color = Color(0.0, 0.75, 0.75, 1)

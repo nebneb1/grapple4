@@ -33,7 +33,7 @@ var active := false
 var ball_speed: int = 0
 
 func reset():
-	yield(get_tree().create_timer(0.0001), "timeout")
+	await get_tree().create_timer(0.0001).timeout
 	winner = ""
 	active = false
 	time = max_time
@@ -44,7 +44,7 @@ func _ready():
 	countdown = 5.0
 #	for player in players:
 #		player.disabled = true
-	yield(get_tree().create_timer(0.001), "timeout")
+	await get_tree().create_timer(0.001).timeout
 
 func _process(delta):
 	if time <= 0:
@@ -61,7 +61,7 @@ func _process(delta):
 			winner = "[center]DRAW!\nthis really should have a match point system but i havnt programed that yet lol"
 			
 		main.get_node("transitionout").emitting = true
-		yield(get_tree().create_timer(3.0), "timeout")
+		await get_tree().create_timer(3.0).timeout
 		players = []	
 		scores = [0, 0]
 		get_tree().reload_current_scene()
@@ -72,8 +72,8 @@ func _process(delta):
 		for player in players:
 			player[1].disabled = false
 		if GRAVITY:
-			ball.gravity_scale = 9.8/SCALE
-			ball.apply_impulse(Vector2.ZERO, Vector2(0, -1.2/pow(SCALE, 0.5)))
+			ball.gravity_scale = 1.0/SCALE
+			ball.apply_impulse(Vector2(0, -1.2/pow(SCALE, 0.5)), Vector2.ZERO)
 		active = true
 	elif countdown > -1: 
 		active = false

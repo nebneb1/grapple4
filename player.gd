@@ -1,9 +1,9 @@
-extends KinematicBody2D
+extends CharacterBody2D
 
-export var player_num := 0
-export var id: int = 4
-export var team: int = 0
-export var has_paddle: bool = false
+@export var player_num := 0
+@export var id: int = 4
+@export var team: int = 0
+@export var has_paddle: bool = false
 
 var max_speed_mult = 1.0
 const max_speed := 8.0/Global.SCALE
@@ -18,7 +18,7 @@ var dashes := 0
 var hooked := false
 var dash_timer = 0.0
 var hook_timer = 0.0
-var velocity := Vector2.ZERO
+var vel := Vector2.ZERO
 var colors = [Color("#87FFC0"), Color("#A399FF"), Color("#FFAAA1"), Color("#FFF2A8")]
 var radius := 20.0/Global.SCALE*2
 var accel := 20.0/Global.SCALE
@@ -27,7 +27,7 @@ var disabled := true
 
 #special modes
 var kick_delay := 0.0
-onready var paddle = $paddle
+@onready var paddle = $paddle
 
 #anims--
 var circle_rotation := 0.0
@@ -61,14 +61,14 @@ func _physics_process(delta):
 		if id == 4:
 			dir.x = int(Input.is_action_pressed("right"))-int(Input.is_action_pressed("left"))
 			dir.y = int(Input.is_action_pressed("down"))-int(Input.is_action_pressed("up"))
-			velocity = lerp(velocity, dir.normalized()*max_speed, delta*accel)
+			vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
 		else:
 			dir.x = Input.get_joy_axis(id, 0)
 			dir.y = Input.get_joy_axis(id, 1)
 			if dir.length() > 1.0:
-				velocity = lerp(velocity, dir.normalized()*max_speed, delta*accel)
+				vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
 			else:
-				velocity = lerp(velocity, dir*max_speed, delta*accel)
+				vel = lerp(vel, dir*max_speed, delta*accel)
 		
 	accel = ACCEL
 	if hooked: 
@@ -81,7 +81,7 @@ func _physics_process(delta):
 	if hooked:
 		Global.ball.gravity_scale = 0
 		Global.ball.apply_central_impulse((global_position-Global.ball.global_position)*PULL_SPEED*delta/500)
-		velocity += (Global.ball.global_position-global_position)*PULL_SPEED*delta/100
+		vel += (Global.ball.global_position-global_position)*PULL_SPEED*delta/100
 		
 		hook_timer += delta
 		if global_position.distance_to(Global.ball.position)*Global.SCALE <= radius+Global.ball.radius or hook_timer >= MAX_HOOKTIME: 
@@ -96,28 +96,29 @@ func _physics_process(delta):
 	else:
 		hook_timer = clamp(hook_timer-delta, 0, MAX_HOOKTIME)
 	
-	move_and_slide(velocity*144*max_speed_mult)
+	set_velocity(vel*144*max_speed_mult)
+	move_and_slide()
 	
 	circle_rotation += 0.5
-	update()
+	queue_redraw()
 
 func _input(event):
 	if event.is_action_pressed("dash") and Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
-			Global.ball.apply_impulse(Vector2.ZERO, global_position.direction_to(Global.ball.global_position)*Global.hit_power)
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
 			kick_delay = Global.KICK_DELAY
 			
 	elif event.is_action_pressed("dash") and dashes > 0 and (event.device == id or id == 4):
 		dashes -= 1
-		velocity = velocity.normalized()*dash_speed
+		vel = vel.normalized()*dash_speed
 		if hooked:
 			Global.ball.max_speed *= 2
-			velocity *= 3
+			vel *= 3
 		dash_timer = 0.0
 	if event.is_action_pressed("hook") and global_position.distance_to(Global.ball.position) <= ring_size+Global.ball.radius and (event.device == id or id == 4) and not (has_paddle and Global.PADDLE_BALL):
 		#exits dribbleing
 		Global.ball.linear_damp = Global.BASE_DAMP
 		if Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
-			Global.ball.apply_impulse(Vector2.ZERO, global_position.direction_to(Global.ball.global_position)*Global.hit_power)
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
 			kick_delay = Global.KICK_DELAY
 		else:
 			$hook.pitch_scale = 2.0
@@ -138,9 +139,9 @@ func _input(event):
 		
 func _draw():
 	if hooked:
-		draw_line(Vector2.ZERO, Global.ball.global_position-global_position, Global.team_colors[team], 5, true)
+		draw_line(Vector2.ZERO, Global.ball.global_position-global_position, Global.team_colors[team], 5)
 		# no idea why the number 144 works
-		draw_arc(Vector2.ZERO, radius+40, 0, deg2rad(144*(MAX_HOOKTIME-hook_timer)), 128, Color(1, (MAX_HOOKTIME-hook_timer), (MAX_HOOKTIME-hook_timer), 0.5), 2, true)
+		draw_arc(Vector2.ZERO, radius+40, 0, deg_to_rad(144*(MAX_HOOKTIME-hook_timer)), 128, Color(1, (MAX_HOOKTIME-hook_timer), (MAX_HOOKTIME-hook_timer), 0.5), 2, true)
 		
 	draw_circle(Vector2.ZERO, radius, Global.team_colors[team])
 #	draw_circle(Vector2.ZERO, radius-5/Global.SCALE, colors[player_num])
@@ -148,14 +149,14 @@ func _draw():
 	if circle_rotation >= 360: circle_rotation = 0
 	for i in range(lines):
 		if i%2 == 0:
-			draw_arc(Vector2.ZERO, ring_size, deg2rad(i*360.0/lines+circle_rotation), deg2rad((i+1)*360.0/lines+circle_rotation), 5, Color(Global.team_colors[team].r, Global.team_colors[team].g, Global.team_colors[team].b, 0.25), 3, true)
+			draw_arc(Vector2.ZERO, ring_size, deg_to_rad(i*360.0/lines+circle_rotation), deg_to_rad((i+1)*360.0/lines+circle_rotation), 5, Color(Global.team_colors[team].r, Global.team_colors[team].g, Global.team_colors[team].b, 0.25), 3, true)
 	
 	var count = 0
 	for i in range(max_dashes*2):
 		if i%2 == 0:
 			count += 1
 			if count <= dashes:
-				draw_arc(Vector2.ZERO, radius+20, deg2rad(i*30/max_dashes*2.0-90), deg2rad((i+1)*30/max_dashes*2.0-90), 40, Color(0.0, 0, 0), 3, true)
+				draw_arc(Vector2.ZERO, radius+20, deg_to_rad(i*30/max_dashes*2.0-90), deg_to_rad((i+1)*30/max_dashes*2.0-90), 40, Color(0.0, 0, 0), 3, true)
 			
 			
 

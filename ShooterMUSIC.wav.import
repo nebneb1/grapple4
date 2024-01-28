@@ -1,13 +1,14 @@
 [remap]
 
 importer="wav"
-type="AudioStreamSample"
-path="res://.import/ShooterMUSIC.wav-5a85c3c23925052159a6f59a33d8591b.sample"
+type="AudioStreamWAV"
+uid="uid://c51y6i50kxgvw"
+path="res://.godot/imported/ShooterMUSIC.wav-5a85c3c23925052159a6f59a33d8591b.sample"
 
 [deps]
 
 source_file="res://ShooterMUSIC.wav"
-dest_files=[ "res://.import/ShooterMUSIC.wav-5a85c3c23925052159a6f59a33d8591b.sample" ]
+dest_files=["res://.godot/imported/ShooterMUSIC.wav-5a85c3c23925052159a6f59a33d8591b.sample"]
 
 [params]
 

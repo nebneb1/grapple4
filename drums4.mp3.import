@@ -2,14 +2,18 @@
 
 importer="mp3"
 type="AudioStreamMP3"
-path="res://.import/drums4.mp3-e4fce1b5a3f98ecb4e1c0bee4795cf96.mp3str"
+uid="uid://cui81ybilvw2u"
+path="res://.godot/imported/drums4.mp3-e4fce1b5a3f98ecb4e1c0bee4795cf96.mp3str"
 
 [deps]
 
 source_file="res://drums4.mp3"
-dest_files=[ "res://.import/drums4.mp3-e4fce1b5a3f98ecb4e1c0bee4795cf96.mp3str" ]
+dest_files=["res://.godot/imported/drums4.mp3-e4fce1b5a3f98ecb4e1c0bee4795cf96.mp3str"]
 
 [params]
 
 loop=true
 loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

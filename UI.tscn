@@ -1,44 +1,47 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://c25lb3gf7d5q8"]
 
-[ext_resource path="res://timer.gd" type="Script" id=1]
-[ext_resource path="res://scoreboard.gd" type="Script" id=2]
-[ext_resource path="res://UI.tres" type="Theme" id=3]
-[ext_resource path="res://win.gd" type="Script" id=4]
+[ext_resource type="Script" path="res://timer.gd" id="1"]
+[ext_resource type="Script" path="res://scoreboard.gd" id="2"]
+[ext_resource type="Theme" uid="uid://dmxfrq6ph7bvl" path="res://UI.tres" id="3"]
+[ext_resource type="Script" path="res://win.gd" id="4"]
 
 [node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="."]
-margin_left = 1634.0
-margin_top = 206.0
-margin_right = 2212.0
-margin_bottom = 507.0
-theme = ExtResource( 3 )
-custom_colors/default_color = Color( 0, 0, 0, 0.501961 )
+layout_mode = 0
+offset_left = 1634.0
+offset_top = 206.0
+offset_right = 2212.0
+offset_bottom = 507.0
+theme = ExtResource("3")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
 bbcode_enabled = true
-bbcode_text = "[center]1 - 1"
 text = "1 - 1"
-script = ExtResource( 2 )
+script = ExtResource("2")
 
 [node name="win" type="RichTextLabel" parent="."]
-margin_left = 521.0
-margin_top = 957.0
-margin_right = 3320.0
-margin_bottom = 1258.0
-theme = ExtResource( 3 )
-custom_colors/default_color = Color( 0, 0, 0, 0.501961 )
+layout_mode = 0
+offset_left = 521.0
+offset_top = 957.0
+offset_right = 3320.0
+offset_bottom = 1258.0
+theme = ExtResource("3")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
 bbcode_enabled = true
-script = ExtResource( 4 )
+script = ExtResource("4")
 
 [node name="timer" type="RichTextLabel" parent="."]
-margin_left = 1634.0
-margin_top = 36.0
-margin_right = 2212.0
-margin_bottom = 337.0
-theme = ExtResource( 3 )
-custom_colors/default_color = Color( 0, 0, 0, 0.501961 )
+layout_mode = 0
+offset_left = 1634.0
+offset_top = 36.0
+offset_right = 2212.0
+offset_bottom = 337.0
+theme = ExtResource("3")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
 bbcode_enabled = true
-bbcode_text = "[center]1 - 1"
 text = "1 - 1"
-script = ExtResource( 1 )
+script = ExtResource("1")

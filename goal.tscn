@@ -1,217 +1,240 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=3 uid="uid://b0sodiei81kyw"]
 
-[ext_resource path="res://goal.gd" type="Script" id=1]
-[ext_resource path="res://circ.png" type="Texture" id=2]
-[ext_resource path="res://UI.tres" type="Theme" id=3]
+[ext_resource type="Script" path="res://goal.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="2"]
+[ext_resource type="Theme" uid="uid://dmxfrq6ph7bvl" path="res://UI.tres" id="3"]
 
-[sub_resource type="Gradient" id=7]
-offsets = PoolRealArray( 0, 0.337607, 0.564103, 0.814815, 1 )
-colors = PoolColorArray( 0.824219, 1, 0.880524, 1, 0.839401, 0.989438, 0.825002, 1, 0.925944, 0.929231, 0.508514, 1, 1, 0.727478, 0.257813, 1, 1, 0, 0, 1 )
+[sub_resource type="Gradient" id="7"]
+offsets = PackedFloat32Array(0, 0.337607, 0.564103, 0.814815, 1)
+colors = PackedColorArray(0.824219, 1, 0.880524, 1, 0.839401, 0.989438, 0.825002, 1, 0.925944, 0.929231, 0.508514, 1, 1, 0.727478, 0.257813, 1, 1, 0, 0, 1)
 
-[sub_resource type="RectangleShape2D" id=4]
-extents = Vector2( 80, 914 )
+[sub_resource type="RectangleShape2D" id="4"]
+size = Vector2(160, 1828)
 
-[sub_resource type="Curve" id=5]
-_data = [ Vector2( 0, 0.0193182 ), 0.0, -0.0491886, 0, 0, Vector2( 0.722772, 0.192045 ), 0.648129, 0.648129, 0, 0, Vector2( 0.965347, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0655849, 0.0, 0, 0 ]
+[sub_resource type="Curve" id="5"]
+_data = [Vector2(0, 0.0193182), 0.0, -0.0491886, 0, 0, Vector2(0.722772, 0.192045), 0.648129, 0.648129, 0, 0, Vector2(0.965347, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0655849, 0.0, 0, 0]
+point_count = 4
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id="8"]
 length = 0.001
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Speed:modulate:r")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Speed:modulate:g")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
 tracks/2/path = NodePath("Speed:modulate:b")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
 tracks/2/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
 tracks/3/path = NodePath("Speed:modulate:a")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
 tracks/3/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
 tracks/4/path = NodePath("Speed:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
-tracks/4/imported = false
-tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [ true ]
+"values": [true]
 }
 tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
 tracks/5/path = NodePath(".:rotation_degrees")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/imported = false
-tracks/5/enabled = true
 tracks/5/keys = {
-"points": PoolRealArray( 8.2, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
 tracks/6/path = NodePath(".:position:x")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
 tracks/6/keys = {
-"points": PoolRealArray( 12.916, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
 tracks/7/path = NodePath(".:position:y")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
 tracks/7/keys = {
-"points": PoolRealArray( -104.533, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
 tracks/8/path = NodePath(".:scale:x")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
-tracks/8/imported = false
-tracks/8/enabled = true
 tracks/8/keys = {
-"points": PoolRealArray( 0.75, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
 tracks/9/path = NodePath(".:scale:y")
 tracks/9/interp = 1
 tracks/9/loop_wrap = true
-tracks/9/imported = false
-tracks/9/enabled = true
 tracks/9/keys = {
-"points": PoolRealArray( 0.75, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id="9"]
 resource_name = "flyout"
 length = 1.5
 tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
 tracks/0/path = NodePath("Speed:modulate:r")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0.5, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
 tracks/1/path = NodePath("Speed:modulate:g")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0.5, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
 tracks/2/path = NodePath("Speed:modulate:b")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
 tracks/2/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0.5, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
 tracks/3/path = NodePath("Speed:modulate:a")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
-tracks/3/imported = false
-tracks/3/enabled = true
 tracks/3/keys = {
-"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0.5, 1 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
 tracks/4/path = NodePath("Speed:visible")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
-tracks/4/imported = false
-tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ true ]
+"values": [true]
 }
 tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
 tracks/5/path = NodePath(".:position:x")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
-tracks/5/imported = false
-tracks/5/enabled = true
 tracks/5/keys = {
-"points": PoolRealArray( -187.084, -0.25, 0, 0.25, 0, 1012.92, -0.25, 0, 0.25, 0, 1012.92, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.6, 1.4 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
 tracks/6/path = NodePath(".:position:y")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
-tracks/6/imported = false
-tracks/6/enabled = true
 tracks/6/keys = {
-"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, -96.054, -0.25, 0, 0.25, 0, 200, -0.25, 0, 0.25, 0 ),
-"times": PoolRealArray( 0, 0.6, 1.4 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
 }
 tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
 tracks/7/path = NodePath(".:rotation_degrees")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
-tracks/7/imported = false
-tracks/7/enabled = true
 tracks/7/keys = {
-"points": PoolRealArray( 50.9, -0.25, 0, 0.25, 0, -28.2, -1, -18, 0.25, 0 ),
-"times": PoolRealArray( 0, 1.4 )
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a1883"]
+_data = {
+"RESET": SubResource("8"),
+"flyout": SubResource("9")
 }
 
 [node name="team_left" type="Area2D"]
-script = ExtResource( 1 )
-gradient = SubResource( 7 )
+script = ExtResource("1")
+gradient = SubResource("7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2( -0.25, 0 )
-shape = SubResource( 4 )
+position = Vector2(-0.25, 0)
+shape = SubResource("4")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 emitting = false
@@ -221,33 +244,25 @@ one_shot = true
 speed_scale = 4.0
 explosiveness = 1.0
 lifetime_randomness = 0.46
-texture = ExtResource( 2 )
+texture = ExtResource("2")
 spread = 62.75
-gravity = Vector2( 0, 0 )
-initial_velocity = 1000.0
-initial_velocity_random = 1.0
-damping = 12.84
-damping_random = 1.0
-scale_amount = 0.5
-scale_amount_random = 1.0
-scale_amount_curve = SubResource( 5 )
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("5")
 
 [node name="speednode" type="Node2D" parent="."]
-position = Vector2( 12.916, -104.533 )
-rotation = 0.143117
-scale = Vector2( 0.75, 0.75 )
+scale = Vector2(1e-05, 1e-05)
 
 [node name="Speed" type="RichTextLabel" parent="speednode"]
-modulate = Color( 1, 1, 1, 0 )
-margin_left = -196.129
-margin_top = -156.556
-margin_right = 571.871
-margin_bottom = 187.444
-theme = ExtResource( 3 )
+modulate = Color(0, 0, 0, 0)
+offset_left = -196.129
+offset_top = -156.556
+offset_right = 571.871
+offset_bottom = 187.444
+theme = ExtResource("3")
 bbcode_enabled = true
-bbcode_text = "asdfads"
 text = "asdfads"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="speednode"]
-anims/RESET = SubResource( 8 )
-anims/flyout = SubResource( 9 )
+libraries = {
+"": SubResource("AnimationLibrary_a1883")
+}
