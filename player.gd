@@ -1,9 +1,11 @@
 extends CharacterBody2D
 
 @export var player_num := 0
+
 @export var id: int = 4
 @export var team: int = 0
 @export var has_paddle: bool = false
+@export var username := "Player"
 
 var max_speed_mult = 1.0
 const max_speed := 8.0/Global.SCALE
@@ -24,6 +26,7 @@ var radius := 20.0/Global.SCALE*2
 var accel := 20.0/Global.SCALE
 var ACCEL := accel
 var disabled := true
+var triangle
 
 #special modes
 var kick_delay := 0.0
@@ -38,6 +41,11 @@ const lines = 32.0
 func _ready():
 	disabled = true
 	Global.players.append([player_num, self])
+	
+	$PlayerTagHolder/Tag.text = "[center][color=" + Global.team_colors[team].to_html() + "]" + username 
+	$PlayerTagHolder.position.y = -radius - 30
+	triangle = PackedVector2Array([Vector2(0, -radius - 10), Vector2(-10, -radius - 20), Vector2(10, -radius - 20)])
+	
 	if has_paddle and Global.PADDLE_BALL:
 		paddle.id = id
 		$paddle/CollisionShape2D/ColorRect.color = Global.team_colors[team]
@@ -135,9 +143,10 @@ func _input(event):
 			$hook.play()
 		kick_delay = Global.KICK_DELAY/5.0
 		hooked = false
-		
-		
+
+const DASH_INDICATOR_ROT = 270
 func _draw():
+	draw_colored_polygon(triangle, Color(Global.team_colors[team]))
 	if hooked:
 		draw_line(Vector2.ZERO, Global.ball.global_position-global_position, Global.team_colors[team], 5)
 		# no idea why the number 144 works
@@ -156,7 +165,7 @@ func _draw():
 		if i%2 == 0:
 			count += 1
 			if count <= dashes:
-				draw_arc(Vector2.ZERO, radius+20, deg_to_rad(i*30/max_dashes*2.0-90), deg_to_rad((i+1)*30/max_dashes*2.0-90), 40, Color(0.0, 0, 0), 3, true)
+				draw_arc(Vector2.ZERO, radius+20, deg_to_rad(i*30/max_dashes*2.0-DASH_INDICATOR_ROT), deg_to_rad((i+1)*30/max_dashes*2.0-DASH_INDICATOR_ROT), 40, Color(0.0, 0, 0), 3, true)
 			
 			
 

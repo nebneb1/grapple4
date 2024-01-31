@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://do4e5dslwsx2a" path="res://Ball.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://he3c5rqt516h" path="res://Group 3.png" id="4"]
 [ext_resource type="Script" path="res://game_manager.gd" id="5"]
-[ext_resource type="PackedScene" path="res://goal.tscn" id="6"]
+[ext_resource type="PackedScene" uid="uid://b0sodiei81kyw" path="res://goal.tscn" id="6"]
 [ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="7"]
 [ext_resource type="Texture2D" uid="uid://boi4xg2u3kni5" path="res://A_black_image.jpeg" id="9"]
 
@@ -234,8 +234,6 @@ point_count = 2
 script = ExtResource("5")
 
 [node name="Control" parent="." instance=ExtResource("2")]
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="Node2D" parent="." instance=ExtResource("3")]
 position = Vector2(1920, 1620)
@@ -345,14 +343,6 @@ team_num = 2
 
 [node name="CollisionShape2D" parent="team_right" index="0"]
 position = Vector2(-0.250488, -14)
-
-[node name="speednode" parent="team_right" index="2"]
-position = Vector2(0, 0)
-rotation = 0.0
-scale = Vector2(1e-05, 1e-05)
-
-[node name="Speed" parent="team_right/speednode" index="0"]
-modulate = Color(0, 0, 0, 0)
 
 [node name="AnimationPlayer" parent="team_right/speednode" index="1"]
 libraries = {

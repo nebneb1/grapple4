@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://cjijvj61nnjs8"]
+[gd_scene load_steps=8 format=3 uid="uid://cjijvj61nnjs8"]
 
 [ext_resource type="Script" path="res://player.gd" id="1"]
 [ext_resource type="AudioStream" uid="uid://bhlq0e056a811" path="res://TankGameSFX-PURCHASE - Copy.wav" id="2"]
 [ext_resource type="Script" path="res://paddle.gd" id="3"]
+[ext_resource type="FontFile" uid="uid://dqevq6kfanasq" path="res://Koulen-Regular.ttf" id="4_rfjux"]
 
 [sub_resource type="CircleShape2D" id="1"]
 radius = 20.0
 
 [sub_resource type="RectangleShape2D" id="2"]
 size = Vector2(6, 40)
+
+[sub_resource type="Theme" id="Theme_kjf66"]
+default_font = ExtResource("4_rfjux")
 
 [node name="player" type="CharacterBody2D"]
 disable_mode = 2
@@ -48,3 +52,14 @@ offset_top = -20.0
 offset_right = 3.0
 offset_bottom = 20.0
 color = Color(0, 0, 0, 1)
+
+[node name="PlayerTagHolder" type="Node2D" parent="."]
+
+[node name="Tag" type="RichTextLabel" parent="PlayerTagHolder"]
+offset_left = -84.0
+offset_top = -14.0
+offset_right = 87.0
+offset_bottom = 16.0
+theme = SubResource("Theme_kjf66")
+bbcode_enabled = true
+text = "[center]Player"

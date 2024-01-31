@@ -1,8 +1,16 @@
 res://default_env.tres
-res://player.tscn
+res://pregame.tscn
 res://UI.tres
+res://comand.gd
+res://server.gd
 res://main.tscn
 res://Ball.tscn
+res://player.tscn
 res://UI.tscn
 res://volley.tscn
 res://goal.tscn
+res://playerServerInstance.tscn
+res://console.gd
+res://menu.gd
+res://console.tscn
+res://menu.tscn

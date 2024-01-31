@@ -247,6 +247,8 @@ lifetime_randomness = 0.46
 texture = ExtResource("2")
 spread = 62.75
 gravity = Vector2(0, 0)
+initial_velocity_min = 10.1
+initial_velocity_max = 1000.0
 scale_amount_curve = SubResource("5")
 
 [node name="speednode" type="Node2D" parent="."]

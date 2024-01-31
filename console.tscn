@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://g4d75mcwaqw5"]
+
+[ext_resource type="Script" path="res://server.gd" id="1_5dy4d"]
+[ext_resource type="Script" path="res://comand.gd" id="2_ogjw2"]
+[ext_resource type="Script" path="res://console.gd" id="3_ggdqg"]
+
+[node name="lobby" type="Node"]
+script = ExtResource("1_5dy4d")
+
+[node name="comand" type="LineEdit" parent="."]
+offset_left = 1.0
+offset_top = 1040.0
+offset_right = 1919.0
+offset_bottom = 1080.0
+placeholder_text = "start typing..."
+caret_blink = true
+script = ExtResource("2_ogjw2")
+
+[node name="console" type="RichTextLabel" parent="."]
+offset_left = 7.0
+offset_top = 1.0
+offset_right = 1919.0
+offset_bottom = 1034.0
+bbcode_enabled = true
+text = "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Type \"help\" to get started!
+"
+scroll_following = true
+script = ExtResource("3_ggdqg")

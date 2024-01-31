@@ -84,6 +84,13 @@ func _physics_process(delta):
 	circle_rotation += 1
 	
 
+#to add once i figure out the math
+#func _input(event):
+	#if Global.PRACTICE_MODE:
+		#if event.is_action_pressed("pass"):
+			#var plr = Global.players[0]
+			#var targ = (plr.global_position + plr.velocity*global_position.distance_to(plr.global_position))
+
 func _draw():
 	if drawing:
 		draw_circle(Vector2.ZERO, radius, color)
