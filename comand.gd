@@ -1,7 +1,8 @@
 extends LineEdit
 
-const commands = ["start", "stop", "maxplayers", "playerlist", "gamelist", "kick", "ban", "banip", "stopgame", "help"]
+const commands = ["start", "stop", "maxplayers", "plist", "qlist", "gamelist", "kick", "ban", "banip", "stopgame", "help"]
 @onready var console = get_node("../console")
+var server_started : bool = false
 
 func _ready():
 	grab_focus()
@@ -16,6 +17,8 @@ func _input(event):
 			process_input(text)
 			clear()
 
+func push(item, tag : String = "default"): console.push(item, tag)
+
 func process_input(input : String):
 	var args = input.split(" ")
 	
@@ -23,22 +26,32 @@ func process_input(input : String):
 		run_cmd(args)
 	
 	else:
-		console.push(input, "none")
-		
+		push(input, "none")
+
+func invalid_arguments(): push("Invalid arguments", "alert")
 func run_cmd(cmd : Array):
 	match cmd[0]:
 		"help":
-			console.push("List of avalable commands:", "info")
+			push("List of avalable commands:", "info")
 			for command in commands:
-				console.push("   "+command, "info")
+				push("   "+command, "info")
 		
 		"maxplayers":
 			if cmd.size() > 1 and typeof(int(cmd[1])) == TYPE_INT and int(cmd[1]) > 0:
 				get_parent().max_players = int(cmd[1])
-				console.push("max players set to " + str(get_parent().max_players), "none")
+				push("max players set to " + str(get_parent().max_players), "none")
 			
-			elif cmd.size() == 1: console.push("max players is currently " + str(get_parent().max_players), "none")
-			else: console.push("Invalid arguments", "alert")
+			elif cmd.size() == 1: push("max players is currently " + str(get_parent().max_players), "none")
+			else: invalid_arguments()
 		
 		"start":
 			get_parent().create_server()
+			server_started = true
+		
+		"qlist":
+			get_parent().rpc_id(get_parent().player_queue[0][0], "initial_ping")
+			if !server_started: push("Server not started", "alert")
+			elif get_parent().player_queue.size() == 0: push("No players connected", "alert")
+			
+			for player in get_parent().player_queue:
+				push(str(player[0]) + " queuing " + str(player[1]) + " waiting " + str(player[2]) + "s", "none")

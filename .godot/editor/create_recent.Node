@@ -1,8 +1,12 @@
+Camera2D
+LineEdit
+CollisionPolygon3D
+AudioStreamPlayer
+ColorRect
 Button
 Control
 Node2D
 Node
-LineEdit
 RichTextLabel
 TextEdit
 Marker2D
