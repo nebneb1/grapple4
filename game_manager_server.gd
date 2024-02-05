@@ -61,7 +61,7 @@ func create_server():
 
 func add_peer(peer_id):
 	connected_player_ids.append(peer_id)
-	rpc_id(peer_id, "client_sync", SCALE, GRAVITY, SOCCAR_MODE, PADDLE_BALL)
+	rpc_id(peer_id, "client_sync", SCALE, GRAVITY, SOCCAR_MODE, PADDLE_BALL, peer_id, multiplayer.get_unique_id())
 	
 
 func remove_peer(peer_id):
@@ -137,7 +137,7 @@ func _input(event):
 		pause = not pause
 	
 @rpc("reliable", "call_remote", "authority")
-func client_sync(sca,gra,soc,pad): pass
+func client_sync(sca,gra,soc,pad,p_id, a_id): pass
 
 @rpc("reliable", "call_remote", "authority")
 func info_sync(info): pass

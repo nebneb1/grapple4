@@ -3,6 +3,7 @@ extends Node
 const team_colors = [Color(1, 0.5,0), Color(0, 0.5, 1)]
 
 #var regen : Nod
+var main_server = Node
 var main: Node2D
 var color : Color = Color(0,0,0)
 var ball : RigidBody2D

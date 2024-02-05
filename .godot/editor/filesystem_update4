@@ -1,3 +1,14 @@
 res://default_env.tres
-res://main_client - Copy.tscn
+res://main_client.tscn
 res://main_practice.tscn
+res://console.tscn
+res://server.gd
+res://menu.gd
+res://menu.tscn
+res://Global.gd
+res://Server_ChatManager.gd
+res://chat.tscn
+res://main_server.tscn
+res://Chatbox.gd
+res://game_manager.gd
+res://game_manager_server.gd

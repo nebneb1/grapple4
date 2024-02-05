@@ -13,6 +13,7 @@ func _ready() -> void:
 
 @rpc("any_peer", "call_local", "reliable")
 func check_message(message : String, username : String, team : int): 
+	Global.main_server.push("recived message: \"" + message + "\" from " + username)
 	for phrase in bad_phrases:
 		if phrase in message:
 			while message.find(phrase) != -1:

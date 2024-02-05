@@ -1,13 +1,13 @@
 [gd_scene load_steps=14 format=3 uid="uid://dr8vykul48hmo"]
 
-[ext_resource type="PackedScene" uid="uid://c25lb3gf7d5q8" path="res://UI.tscn" id="2"]
-[ext_resource type="PackedScene" uid="uid://ksb5kue4hl1g" path="res://chat.tscn" id="2_rku4r"]
-[ext_resource type="PackedScene" uid="uid://do4e5dslwsx2a" path="res://Ball.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://clxonn1mw5wp1" path="res://Group 2.png" id="4"]
-[ext_resource type="Script" path="res://game_manager.gd" id="5"]
-[ext_resource type="PackedScene" uid="uid://b0sodiei81kyw" path="res://goal.tscn" id="6"]
-[ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="7"]
-[ext_resource type="Texture2D" uid="uid://boi4xg2u3kni5" path="res://A_black_image.jpeg" id="9"]
+[ext_resource type="Script" path="res://game_manager.gd" id="1_xottb"]
+[ext_resource type="PackedScene" uid="uid://ksb5kue4hl1g" path="res://chat.tscn" id="2_1rpxx"]
+[ext_resource type="PackedScene" uid="uid://c25lb3gf7d5q8" path="res://UI.tscn" id="3_v3xi0"]
+[ext_resource type="PackedScene" uid="uid://do4e5dslwsx2a" path="res://Ball.tscn" id="4_pnnd3"]
+[ext_resource type="Texture2D" uid="uid://clxonn1mw5wp1" path="res://Group 2.png" id="5_a7h8l"]
+[ext_resource type="Texture2D" uid="uid://boi4xg2u3kni5" path="res://A_black_image.jpeg" id="6_xfj4f"]
+[ext_resource type="PackedScene" uid="uid://b0sodiei81kyw" path="res://goal.tscn" id="7_si0ak"]
+[ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="8_gbe3m"]
 
 [sub_resource type="Animation" id="8"]
 length = 0.001
@@ -231,13 +231,13 @@ _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [node name="Game" type="Node2D"]
-script = ExtResource("5")
+script = ExtResource("1_xottb")
 
-[node name="Chat" parent="." instance=ExtResource("2_rku4r")]
+[node name="Chat" parent="." instance=ExtResource("2_1rpxx")]
 
-[node name="UI" parent="." instance=ExtResource("2")]
+[node name="UI" parent="." instance=ExtResource("3_v3xi0")]
 
-[node name="Ball" parent="." instance=ExtResource("3")]
+[node name="Ball" parent="." instance=ExtResource("4_pnnd3")]
 position = Vector2(1920, 1620)
 gravity_scale = 0.0
 angular_damp = 0.0
@@ -271,6 +271,7 @@ scale = Vector2(2, 2)
 collision_layer = 3
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls/StaticBody2D"]
+visible = false
 position = Vector2(-0.5, 37.9187)
 scale = Vector2(1, 0.964)
 polygon = PackedVector2Array(1, 674.358, 43.5, 710.665, 43.5, 723.5, 43.5, 794.172, 45.5, 805.064, 48.5, 811.288, 51, 814.918, 57, 821.143, 297.5, 1047.5, 301.5, 1050.5, 305.5, 1052.5, 311, 1054.5, 318.5, 1055.5, 325.5, 1056.5, 1591.5, 1056.5, 1608.5, 1055, 1613.5, 1053.5, 1622.5, 1048.5, 1867.5, 818.03, 1872, 812.325, 1875, 806.101, 1876.5, 801.952, 1877.5, 793.653, 1877.5, 710.665, 1920.5, 674.358, 2159, 685, 2159.5, 355.5, 1920.5, 368.342, 1877.5, 330.997, 1877.5, 251.122, 1876, 238.155, 1873, 230.894, 1869, 224.669, 1623.5, -6.5, 1619, -9.5, 1614, -12, 1607.5, -14, 1601.5, -15, 1595, -15.5, 326.5, -15.5, 311.5, -14, 305.5, -11.5, 301.5, -9.5, 298, -6.5, 298, -6.5, 292, -1.5, 54, 222.595, 50, 227.782, 47, 233.487, 45, 237.636, 43.5, 242.5, 43.5, 330.479, 0.5, 367.304, -252.5, 373.01, -267.5, 527.574, -374.5, 532.761, -171, -124, 2495.5, -145, 2509.5, 1334, -267, 1333.5, -373, 536.391, -267, 532.242, -278, 669.172)
@@ -279,7 +280,7 @@ polygon = PackedVector2Array(1, 674.358, 43.5, 710.665, 43.5, 723.5, 43.5, 794.1
 z_index = -4
 position = Vector2(960, 540)
 scale = Vector2(0.5, 0.5)
-texture = ExtResource("4")
+texture = ExtResource("5_a7h8l")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(1920, 1080)
@@ -290,15 +291,15 @@ zoom = Vector2(0.5, 0.5)
 visible = false
 position = Vector2(-0.000215888, 1420.5)
 scale = Vector2(6, 1.43125)
-texture = ExtResource("9")
+texture = ExtResource("6_xfj4f")
 
 [node name="ABlackImage2" type="Sprite2D" parent="Camera2D"]
 visible = false
 position = Vector2(0, -1423)
 scale = Vector2(6, 1.43125)
-texture = ExtResource("9")
+texture = ExtResource("6_xfj4f")
 
-[node name="team_left" parent="." instance=ExtResource("6")]
+[node name="team_left" parent="." instance=ExtResource("7_si0ak")]
 position = Vector2(-200, 1080)
 
 [node name="AnimationPlayer" parent="team_left/speednode" index="1"]
@@ -306,7 +307,7 @@ libraries = {
 "": SubResource("AnimationLibrary_16bxu")
 }
 
-[node name="team_right" parent="." instance=ExtResource("6")]
+[node name="team_right" parent="." instance=ExtResource("7_si0ak")]
 position = Vector2(4040, 1080)
 scale = Vector2(-1, 1)
 team_num = 2
@@ -320,7 +321,7 @@ amount = 100
 lifetime = 2.0
 one_shot = true
 explosiveness = 1.0
-texture = ExtResource("7")
+texture = ExtResource("8_gbe3m")
 emission_shape = 3
 emission_rect_extents = Vector2(1920, 1080)
 gravity = Vector2(0, 0)
@@ -337,7 +338,7 @@ lifetime = 4.0
 one_shot = true
 explosiveness = 1.0
 lifetime_randomness = 0.25
-texture = ExtResource("7")
+texture = ExtResource("8_gbe3m")
 emission_shape = 2
 emission_sphere_radius = 1.0
 gravity = Vector2(0, 0)

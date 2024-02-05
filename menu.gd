@@ -33,5 +33,5 @@ func join_game(port : int, mode : int):
 	var multiplayer_peer = ENetMultiplayerPeer.new()
 	multiplayer_peer.create_client(ADDRESS, curr_port)
 	multiplayer.multiplayer_peer = multiplayer_peer
-	Global.username = username
+	GlobalClient.username = username
 	get_tree().change_scene_to_packed(main_scene)

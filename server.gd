@@ -19,6 +19,7 @@ var active_games = []
 @onready var game = preload("res://main_server.tscn")
 
 func _ready():
+	Global.main_server = self
 	for i in range(128):
 		open_ports.append(true)
 
@@ -29,7 +30,7 @@ func _process(delta: float):
 		for modes in player[1]:
 			mode_counts[modes] += 1
 			if mode_counts[modes] >= max_players_per_game[modes]:
-				push("Enough players connected in " + str(modes) + " creating game!")
+				push("Enough players connected in " + str(modes) + ", creating game!")
 				create_game(modes)
 	
 func create_game(mode : int):
@@ -46,18 +47,19 @@ func create_game(mode : int):
 		
 	push("fetching players...")
 	var players = []
-	player_queue.append(["HELP",[0], 0.0])
-	player_queue.append(["HELP",[0], 0.0])
-	player_queue.append(["HELP",[0], 0.0])
-	player_queue.append(["HELP",[0], 0.0])
-	player_queue.append(["HELP",[0], 0.0])
+	
+	# janky line that shouldnt work but fixes a dum bug with the dum for loop for some dum reason
+	player_queue.append(["",[0], 0.0])
+	
 	push(player_queue)
 	for player in player_queue:
-		push(player)
 		if mode in player[1]:
 			players.append(player)
 			#player_queue.erase(player)
-	push(player_queue)
+	
+	# undo jank
+	player_queue.erase(["",[0], 0.0])
+	
 	push(players)
 	
 	push("creating teams...")

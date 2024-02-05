@@ -101,13 +101,14 @@ func get_peer_info(peer):
 			return plr
 	
 @rpc("reliable", "call_remote", "authority")
-func client_sync(sca,gra,soc,pad):
+func client_sync(sca,gra,soc,pad,p_id, a_id):
 	SCALE = sca
 	GRAVITY = gra
 	SOCCAR_MODE = soc
 	PADDLE_BALL = pad
-	authority_id = multiplayer.get_remote_sender_id()
-	id = multiplayer.get_unique_id()
+	authority_id = a_id
+	id = p_id
+	print(authority_id, " a ", id)
 	rpc_id(authority_id, "server_sync", id, GlobalClient.username)
 
 @rpc("reliable", "call_remote", "any_peer")
