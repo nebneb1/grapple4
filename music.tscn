@@ -1,9 +1,8 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=2 format=3 uid="uid://1uq7t8uwagax"]
 
-[ext_resource path="res://drums4.mp3" type="AudioStream" id=1]
+[ext_resource type="AudioStream" uid="uid://cui81ybilvw2u" path="res://drums4.mp3" id="1"]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer"]
-stream = ExtResource( 1 )
-volume_db = -80.0
+stream = ExtResource("1")
 autoplay = true
-bus = "music"
+bus = &"music"

@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=3 uid="uid://jx78elqo3w7i"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_jpi2g"]
+[ext_resource type="AudioStream" uid="uid://bhlq0e056a811" path="res://TankGameSFX-PURCHASE - Copy.wav" id="2_ju02y"]
+[ext_resource type="Script" path="res://paddle.gd" id="3_nrw1p"]
+[ext_resource type="FontFile" uid="uid://dqevq6kfanasq" path="res://Koulen-Regular.ttf" id="4_1u3lv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cqapy"]
+radius = 20.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwfai"]
+size = Vector2(6, 40)
+
+[sub_resource type="Theme" id="Theme_kjf66"]
+default_font = ExtResource("4_1u3lv")
+
+[node name="player" type="CharacterBody2D"]
+disable_mode = 2
+collision_layer = 3
+collision_mask = 2
+motion_mode = 1
+wall_min_slide_angle = 3.14159
+platform_on_leave = 2
+script = ExtResource("1_jpi2g")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_cqapy")
+
+[node name="hook" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_ju02y")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="hook2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_ju02y")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="paddle" type="CharacterBody2D" parent="."]
+script = ExtResource("3_nrw1p")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paddle"]
+z_index = -1
+shape = SubResource("RectangleShape2D_hwfai")
+
+[node name="ColorRect" type="ColorRect" parent="paddle/CollisionShape2D"]
+show_behind_parent = true
+offset_left = -3.0
+offset_top = -20.0
+offset_right = 3.0
+offset_bottom = 20.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayerTagHolder" type="Node2D" parent="."]
+
+[node name="Tag" type="RichTextLabel" parent="PlayerTagHolder"]
+offset_left = -84.0
+offset_top = -14.0
+offset_right = 87.0
+offset_bottom = 16.0
+theme = SubResource("Theme_kjf66")
+bbcode_enabled = true
+text = "[center]Player"

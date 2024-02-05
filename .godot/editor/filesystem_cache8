@@ -1,47 +1,66 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1706732699
-A_black_image.jpeg::CompressedTexture2D::3387381740504427058::1682440811::1706397810::1::::<><>::
-ball.gd::GDScript::-1::1706583215::0::1::::<>RigidBody2D<>::
-Ball.tscn::PackedScene::8202069444574156738::1706730012::0::1::::<><>::res://ball.gd<>uid://bop5jak8a7jj2::::res://Untitled2.png<>uid://bt3xp6swaa3tm::::res://main.tres
-circ.png::CompressedTexture2D::6900043190863064203::1673105554::1706397810::1::::<><>::
-comand.gd::GDScript::-1::1706728806::0::1::::<>LineEdit<>::
-console.gd::GDScript::-1::1706674485::0::1::::<>RichTextLabel<>::
-console.tscn::PackedScene::481240907437630698::1706730013::0::1::::<><>::res://server.gd<>res://comand.gd<>res://console.gd
+::res://::1707123071
+A_black_image.jpeg::CompressedTexture2D::3387381740504427058::1682440811::1707113811::1::::<><>::
+badwords.txt::TextFile::-1::1707100429::0::1::::<><>::
+ball.gd::GDScript::-1::1707098433::0::1::::<>RigidBody2D<>::
+Ball.tscn::PackedScene::8202069444574156738::1707100585::0::1::::<><>::res://ball.gd<>uid://bop5jak8a7jj2::::res://Untitled2.png<>uid://bt3xp6swaa3tm::::res://main.tres
+bocbubble1.png::CompressedTexture2D::2980935994175370323::1706841949::1707113811::1::::<><>::
+bocbubble2.png::CompressedTexture2D::7504014924372634959::1706841949::1707113811::1::::<><>::
+chat.tscn::PackedScene::739162083113687086::1707100586::0::1::::<><>::res://Chatbox.gd
+Chatbox.gd::GDScript::-1::1707096624::0::1::::<>VBoxContainer<>::
+circ.png::CompressedTexture2D::6900043190863064203::1673105554::1707113811::1::::<><>::
+client_player.tscn::PackedScene::5220317945254435626::1707100585::0::1::::<><>::uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
+comand.gd::GDScript::-1::1706746058::0::1::::<>LineEdit<>::
+console.gd::GDScript::-1::1707097624::0::1::::<>RichTextLabel<>::
+console.tscn::PackedScene::481240907437630698::1707100586::0::1::::<><>::res://server.gd<>res://comand.gd<>res://console.gd
 dash_pickup.tscn::PackedScene::-1::1706397799::0::1::::<><>::
-default_bus_layout.tres::AudioBusLayout::-1::1706397799::0::1::::<><>::
-default_env.tres::Environment::7024831459538509355::1706730013::0::1::::<><>::
-drums4.mp3::AudioStreamMP3::6195184616066391322::1682443974::1706397810::1::::<><>::
+default_bus_layout.tres::AudioBusLayout::620653425947964362::1707093313::0::1::::<><>::
+default_env.tres::Environment::7024831459538509355::1707115508::0::1::::<><>::
+drums4.mp3::AudioStreamMP3::6195184616066391322::1682443974::1707113811::1::::<><>::
 energybar.gd::GDScript::-1::1706397799::0::1::::<>ProgressBar<>::
 energy_pickup.tscn::PackedScene::-1::1706397799::0::1::::<><>::
-FIGHTT3_.ttf::FontFile::9167406443420804997::1673108898::1706397809::1::::<><>::
-game_manager.gd::GDScript::-1::1706397799::0::1::::<>Node2D<>::
-Global.gd::GDScript::-1::1706684162::0::1::::<>Node<>::
+FIGHTT3_.ttf::FontFile::9167406443420804997::1673108898::1707113811::1::::<><>::
+game_manager.gd::GDScript::-1::1707096624::0::1::::<>Node2D<>::
+game_manager_server.gd::GDScript::-1::1707096624::0::1::::<>Node2D<>::
+Global.gd::GDScript::-1::1707030036::0::1::::<>Node<>::
+Global_Client.gd::GDScript::-1::1707095499::0::1::::<>Node<>::
 goal.gd::GDScript::-1::1706398186::0::1::::<>Area2D<>::
-goal.tscn::PackedScene::4179156396272067406::1706730012::0::1::::<><>::res://goal.gd<>uid://c5kox57lcbcdv::::res://circ.png<>uid://dmxfrq6ph7bvl::::res://UI.tres
-Group 2.png::CompressedTexture2D::5593273312511723584::1673027282::1706397810::1::::<><>::
-Group 3.png::CompressedTexture2D::501284666583483373::1683311032::1706397810::1::::<><>::
-icon.png::CompressedTexture2D::2853253792317006982::1672943790::1706397810::1::::<><>::
-Koulen-Regular.ttf::FontFile::8291846333754221820::1673153102::1706397809::1::::<><>::
+goal.tscn::PackedScene::4179156396272067406::1707100586::0::1::::<><>::res://goal.gd<>uid://c5kox57lcbcdv::::res://circ.png<>uid://dmxfrq6ph7bvl::::res://UI.tres
+goal_server.tscn::PackedScene::8145241843593990232::1707100586::0::1::::<><>::
+Group 2.png::CompressedTexture2D::5593273312511723584::1673027282::1707113812::1::::<><>::
+Group 3.png::CompressedTexture2D::501284666583483373::1683311032::1707113812::1::::<><>::
+hadeybubble1.png::CompressedTexture2D::3009363592516962619::1706842716::1707113811::1::::<><>::
+hadeybubble2.png::CompressedTexture2D::2138933810855205698::1706842792::1707113811::1::::<><>::
+icon.png::CompressedTexture2D::2853253792317006982::1672943790::1707113811::1::::<><>::
+Koulen-Regular.ttf::FontFile::8291846333754221820::1673153102::1707113811::1::::<><>::
 main.tres::PhysicsMaterial::3779236224701538498::1706400655::0::1::::<><>::
-main.tscn::PackedScene::8421915331381078266::1706730012::0::1::::<><>::uid://cjijvj61nnjs8::::res://player.tscn<>uid://c25lb3gf7d5q8::::res://UI.tscn<>uid://do4e5dslwsx2a::::res://Ball.tscn<>uid://clxonn1mw5wp1::::res://Group 2.png<>res://game_manager.gd<>uid://b0sodiei81kyw::::res://goal.tscn<>uid://c5kox57lcbcdv::::res://circ.png<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg
-music.tscn::PackedScene::-1::1706397799::0::1::::<><>::res://drums4.mp3
+main_client - Copy.tscn::PackedScene::8421915331381078266::1707115507::0::1::::<><>::uid://c25lb3gf7d5q8::::res://UI.tscn<>uid://ksb5kue4hl1g::::res://chat.tscn<>uid://do4e5dslwsx2a::::res://Ball.tscn<>uid://clxonn1mw5wp1::::res://Group 2.png<>res://game_manager.gd<>uid://b0sodiei81kyw::::res://goal.tscn<>uid://c5kox57lcbcdv::::res://circ.png<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg
+main_client(CORR).tscn::PackedScene::8421915331381078266::1707100585::0::1::::<><>::uid://c25lb3gf7d5q8::::res://UI.tscn<>uid://ksb5kue4hl1g::::res://chat.tscn<>uid://do4e5dslwsx2a::::res://Ball.tscn<>uid://clxonn1mw5wp1::::res://Group 2.png<>res://game_manager.gd<>uid://b0sodiei81kyw::::res://goal.tscn<>uid://c5kox57lcbcdv::::res://circ.png<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg
+main_practice.tscn::PackedScene::2381066994783601817::1707115508::0::1::::<><>::res://practice_goal.gd<>uid://dmxfrq6ph7bvl::::res://UI.tres<>uid://bt3xp6swaa3tm::::res://main.tres<>uid://bop5jak8a7jj2::::res://Untitled2.png<>uid://clxonn1mw5wp1::::res://Group 2.png<>uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf<>uid://c5kox57lcbcdv::::res://circ.png<>uid://cmwohpkvsofxy::::res://new_gradient.tres
+main_server.tscn::PackedScene::3093882512188011356::1707100585::0::1::::<><>::res://game_manager_server.gd<>res://Server_ChatManager.gd<>uid://bt3xp6swaa3tm::::res://main.tres<>uid://dobu7ci0udtem::::res://goal_server.tscn<>uid://cjijvj61nnjs8::::res://player.tscn
+menu.gd::GDScript::-1::1706838899::0::1::::<>Control<>::
+menu.tscn::PackedScene::8672770709947319280::1707100586::0::1::::<><>::res://menu.gd
+music.tscn::PackedScene::1867227156819570895::1707100586::0::1::::<><>::uid://cui81ybilvw2u::::res://drums4.mp3
+new_gradient.tres::Gradient::5661387144365021674::1706818483::0::1::::<><>::
+non-client_player.tscn::PackedScene::681182383886106400::1707100586::0::1::::<><>::res://player.gd<>uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>res://paddle.gd<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
 paddle.gd::GDScript::-1::1706400315::0::1::::<>CharacterBody2D<>::
 player.gd::GDScript::-1::1706583215::0::1::::<>CharacterBody2D<>::
-player.tscn::PackedScene::5421640458566176353::1706730012::0::1::::<><>::res://player.gd<>uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>res://paddle.gd<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
+player.tscn::PackedScene::5421640458566176353::1707100585::0::1::::<><>::res://player.gd<>uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>res://paddle.gd<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
 playerinstance.gd::GDScript::-1::1706596624::0::1::::<>Node<>::
-playerServerInstance.tscn::PackedScene::4184016085969652317::1706730013::0::1::::<><>::res://playerinstance.gd
-menu.tscn::PackedScene::8672770709947319280::1706730013::0::1::::<><>::res://menu.gd
-menu.gd::GDScript::-1::1706730010::0::1::::<>Control<>::
+playerServerInstance.tscn::PackedScene::4184016085969652317::1707100586::0::1::::<><>::res://playerinstance.gd
+practice_goal.gd::GDScript::-1::1706818309::0::1::::<>Area2D<>::
+puppet_client_player.tscn::PackedScene::1035206372915986479::1707100586::0::1::::<><>::res://player.gd<>uid://bhlq0e056a811::::res://TankGameSFX-PURCHASE - Copy.wav<>res://paddle.gd<>uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
 scoreboard.gd::GDScript::-1::1706397799::0::1::::<>RichTextLabel<>::
-server.gd::GDScript::-1::1706730010::0::1::::<>Node<>::
-ShooterMUSIC.wav::AudioStreamWAV::6933693533251268976::1682401038::1706397810::1::::<><>::
+server.gd::GDScript::-1::1707100531::0::1::::<>Node<>::
+Server_ChatManager.gd::GDScript::-1::1707096624::0::1::::<>Node<>::
+ShooterMUSIC.wav::AudioStreamWAV::6933693533251268976::1682401038::1707113812::1::::<><>::
 speed.tscn::PackedScene::-1::1706397799::0::1::::<><>::
-Sugar Snow.ttf::FontFile::8573075342830070309::1673037194::1706397809::1::::<><>::
-swordsfx.ogg::AudioStreamOggVorbis::5632092339414025468::1706732699::1706732699::1::::<><>::
-TankGameSFX-PURCHASE - Copy.wav::AudioStreamWAV::2901467111303910274::1682400598::1706397810::1::::<><>::
+Sugar Snow.ttf::FontFile::8573075342830070309::1673037194::1707113811::1::::<><>::
+TankGameSFX-PURCHASE - Copy.wav::AudioStreamWAV::2901467111303910274::1682400598::1707113812::1::::<><>::
+test(del).tscn::PackedScene::8412687423891264005::1707100586::0::1::::<><>::res://Server_ChatManager.gd
 timer.gd::GDScript::-1::1706583260::0::1::::<>RichTextLabel<>::
-UI.tres::Theme::8049343695493966697::1706667900::0::1::::<><>::uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
-UI.tscn::PackedScene::6730542631141929329::1706730012::0::1::::<><>::res://timer.gd<>res://scoreboard.gd<>uid://dmxfrq6ph7bvl::::res://UI.tres<>res://win.gd
-Untitled2.png::CompressedTexture2D::3401867759813270673::1673097026::1706397810::1::::<><>::
-volley.tscn::PackedScene::6616682839793789815::1706730012::0::1::::<><>::uid://cjijvj61nnjs8::::res://player.tscn<>uid://c25lb3gf7d5q8::::res://UI.tscn<>uid://do4e5dslwsx2a::::res://Ball.tscn<>uid://he3c5rqt516h::::res://Group 3.png<>res://game_manager.gd<>uid://b0sodiei81kyw::::res://goal.tscn<>uid://c5kox57lcbcdv::::res://circ.png<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg
+UI.tres::Theme::8049343695493966697::1707090398::0::1::::<><>::uid://dqevq6kfanasq::::res://Koulen-Regular.ttf
+UI.tscn::PackedScene::6730542631141929329::1706760001::0::1::::<><>::res://timer.gd<>res://scoreboard.gd<>uid://dmxfrq6ph7bvl::::res://UI.tres<>res://win.gd
+Untitled2.png::CompressedTexture2D::3401867759813270673::1673097026::1707113811::1::::<><>::
+volley.tscn::PackedScene::6616682839793789815::1707100586::0::1::::<><>::uid://cjijvj61nnjs8::::res://player.tscn<>uid://c25lb3gf7d5q8::::res://UI.tscn<>uid://do4e5dslwsx2a::::res://Ball.tscn<>uid://he3c5rqt516h::::res://Group 3.png<>res://game_manager.gd<>uid://b0sodiei81kyw::::res://goal.tscn<>uid://c5kox57lcbcdv::::res://circ.png<>uid://boi4xg2u3kni5::::res://A_black_image.jpeg
 win.gd::GDScript::-1::1706397799::0::1::::<>RichTextLabel<>::

@@ -1,0 +1,236 @@
+[gd_scene load_steps=11 format=3 uid="uid://bkcx17wi1euvc"]
+
+[ext_resource type="Script" path="res://game_manager_server.gd" id="1_451av"]
+[ext_resource type="Script" path="res://Server_ChatManager.gd" id="2_4dwg8"]
+[ext_resource type="PhysicsMaterial" uid="uid://bt3xp6swaa3tm" path="res://main.tres" id="2_lvq8p"]
+[ext_resource type="PackedScene" uid="uid://dobu7ci0udtem" path="res://goal_server.tscn" id="4_0d5io"]
+[ext_resource type="PackedScene" uid="uid://cjijvj61nnjs8" path="res://player.tscn" id="4_wu0kd"]
+
+[sub_resource type="GDScript" id="GDScript_guls8"]
+script/source = "extends Node
+
+@onready var scores = Global.scores
+
+#func _ready():
+	#Global.scoreboard = self
+	#text = \"[center][color=#\" + str(Global.team_colors[0].to_html()) + \"]\" + str(scores[1]) + \"[/color] - [color=#\" + str(Global.team_colors[1].to_html()) + \"]\" + str(scores[0])
+	#
+#func update_score(goal_num : int, ammount: int):
+	#scores[goal_num-1] += ammount
+	#text = \"[center][color=#\" + str(Global.team_colors[0].to_html()) + \"]\" + str(scores[1]) + \"[/color] - [color=#\" + str(Global.team_colors[1].to_html()) + \"]\" + str(scores[0])
+"
+
+[sub_resource type="GDScript" id="GDScript_eq53q"]
+script/source = "extends Node
+
+
+#func _process(delta):
+	#text = Global.winner
+"
+
+[sub_resource type="GDScript" id="GDScript_76q7e"]
+script/source = "extends Node
+
+
+func _process(delta):
+	pass
+	
+	
+	#if not Global.PRACTICE_MODE:
+		#if int(Global.countdown) == -1:
+			#if int(Global.time)%60 > 9:
+				#text = \"[center]\" + str(int(Global.time/60)) + \" : \" + str(int(Global.time)%60)
+			#else:
+				#text = \"[center]\" + str(int(Global.time/60)) + \" : 0\" + str(int(Global.time)%60)
+		#
+		#else:
+			#text = \"[center]\" + str(int(Global.countdown))
+	#else:
+		#text = \"[center]PRACTICE\"
+"
+
+[sub_resource type="GDScript" id="GDScript_826m8"]
+script/source = "extends RigidBody2D
+
+const radius := 60.0/Global.SCALE
+const MAX_SPEED := 2000.0/Global.SCALE
+var max_speed := 2000.0/Global.SCALE
+var disable := false
+
+var circle_rotation = 0
+var can_hit := false
+var color := Color(0,0,0)
+var hit_color = Color(0.0, 0.75, 0.75, 1)
+var kick_color = Color(0.75, 0.0, 0.75, 1)
+var grav_scale = gravity_scale
+var drawing := true
+var can_kick := false
+
+func _ready():
+	Global.ball = self
+	$CollisionShape2D.shape.radius = radius
+	if not Global.GRAVITY: 
+		linear_damp = Global.BASE_DAMP
+	
+	
+func _process(delta):
+	if disable: linear_velocity = Vector2.ZERO
+	
+	if Global.GRAVITY: gravity_scale = grav_scale
+	else: gravity_scale = 0
+	
+	if Global.SOCCAR_MODE:
+		if linear_damp > Global.BASE_DAMP:
+			linear_damp -= Global.DAMP_FALLOFF*delta
+	
+#		physics_material_override.absorbent = false
+		can_kick = false
+		for player in Global.players:
+			player[1].max_speed_mult = 1.0
+			if not player[1].hooked:
+				if player[1].global_position.distance_to(global_position) <= player[1].radius + radius + Global.hit_buffer and player[1].kick_delay <= 0:
+					if Global.GRAVITY: gravity_scale = 0
+					player[1].max_speed_mult = 0.7
+					can_kick = true
+#					physics_material_override.absorbent = true
+					linear_damp = Global.NEAR_DAMP
+				
+				elif player[1].global_position.distance_to(global_position) <= player[1].ring_size and player[1].kick_delay <= 0:
+					if Global.GRAVITY: gravity_scale = grav_scale/2
+					player[1].max_speed_mult = 0.875
+					linear_damp = Global.NEAR_DAMP/2
+			
+			
+	
+	#$CPUParticles2D.emitting = false
+	#if linear_velocity.length() > MAX_SPEED-500/Global.SCALE:
+		#$CPUParticles2D.emitting = true
+	
+	if max_speed > MAX_SPEED: 
+		max_speed -= (MAX_SPEED/2)*delta
+		#$CPUParticles2D2.emitting = false
+		#if linear_velocity.length() > MAX_SPEED*2-1000/Global.SCALE:
+			#$CPUParticles2D2.direction = linear_velocity.normalized()
+			#$CPUParticles2D2.emitting = true
+		
+	#queue_redraw()
+	#if not drawing:
+		#$CPUParticles2D.emitting = false
+		#$CPUParticles2D2.emitting = false
+
+func _physics_process(delta):
+	if linear_velocity.length() > max_speed:
+		apply_central_impulse(-linear_velocity.normalized()*delta*((linear_velocity.length()-max_speed)/100))
+#		color.r += 0.02
+	
+	else:
+		pass
+#		color.r -= 0.005
+	
+	circle_rotation += 1
+	
+
+#to add once i figure out the math
+#func _input(event):
+	#if Global.PRACTICE_MODE:
+		#if event.is_action_pressed(\"pass\"):
+			#var plr = Global.players[0]
+			#var targ = (plr.global_position + plr.velocity*global_position.distance_to(plr.global_position))
+
+#func _draw():
+	#if drawing:
+		#draw_circle(Vector2.ZERO, radius, color)
+		#if can_hit:
+			#can_hit = false
+			#if can_kick and Global.SOCCAR_MODE:
+				#for i in range(8):
+					#if i%2 == 0:
+						#draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation*2), deg_to_rad((i+1)*360.0/8+circle_rotation*2), 10, kick_color, 3, true)
+			#else:
+				#for i in range(8):
+					#if i%2 == 0:
+						#draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation), deg_to_rad((i+1)*360.0/8+circle_rotation), 10, hit_color, 3, true)
+				#
+			#hit_color = Color(0.0, 0.75, 0.75, 1)
+"
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 60.0
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_451av")
+
+[node name="Chat" type="Node" parent="."]
+
+[node name="Chatbox" type="Node" parent="Chat"]
+script = ExtResource("2_4dwg8")
+
+[node name="UI" type="Node" parent="."]
+
+[node name="scoreboard" type="Node" parent="UI"]
+script = SubResource("GDScript_guls8")
+
+[node name="win" type="Node" parent="UI"]
+script = SubResource("GDScript_eq53q")
+
+[node name="timer" type="Node" parent="UI"]
+script = SubResource("GDScript_76q7e")
+
+[node name="Players" type="Node2D" parent="."]
+
+[node name="Ball" type="RigidBody2D" parent="." groups=["ball"]]
+z_index = 1
+position = Vector2(1920, 1620)
+disable_mode = 2
+mass = 0.00102041
+physics_material_override = ExtResource("2_lvq8p")
+gravity_scale = 0.0
+can_sleep = false
+continuous_cd = 2
+angular_damp = 3.06
+script = SubResource("GDScript_826m8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("1")
+
+[node name="player" parent="." instance=ExtResource("4_wu0kd")]
+z_index = -1
+position = Vector2(600, 500)
+
+[node name="PlayerSpawns" type="Node" parent="."]
+
+[node name="b2" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3240, 1660)
+
+[node name="o1" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(600, 500)
+
+[node name="o2" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(600, 1660)
+
+[node name="o3" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(500, 1080)
+
+[node name="b1" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3240, 500)
+
+[node name="b3" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3340, 1080)
+
+[node name="walls" type="Node2D" parent="."]
+scale = Vector2(2, 2)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="walls"]
+collision_layer = 3
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls/StaticBody2D"]
+position = Vector2(-0.5, 37.9187)
+scale = Vector2(1, 0.964)
+polygon = PackedVector2Array(1, 674.358, 43.5, 710.665, 43.5, 723.5, 43.5, 794.172, 45.5, 805.064, 48.5, 811.288, 51, 814.918, 57, 821.143, 297.5, 1047.5, 301.5, 1050.5, 305.5, 1052.5, 311, 1054.5, 318.5, 1055.5, 325.5, 1056.5, 1591.5, 1056.5, 1608.5, 1055, 1613.5, 1053.5, 1622.5, 1048.5, 1867.5, 818.03, 1872, 812.325, 1875, 806.101, 1876.5, 801.952, 1877.5, 793.653, 1877.5, 710.665, 1920.5, 674.358, 2159, 685, 2159.5, 355.5, 1920.5, 368.342, 1877.5, 330.997, 1877.5, 251.122, 1876, 238.155, 1873, 230.894, 1869, 224.669, 1623.5, -6.5, 1619, -9.5, 1614, -12, 1607.5, -14, 1601.5, -15, 1595, -15.5, 326.5, -15.5, 311.5, -14, 305.5, -11.5, 301.5, -9.5, 298, -6.5, 298, -6.5, 292, -1.5, 54, 222.595, 50, 227.782, 47, 233.487, 45, 237.636, 43.5, 242.5, 43.5, 330.479, 0.5, 367.304, -252.5, 373.01, -267.5, 527.574, -374.5, 532.761, -171, -124, 2495.5, -145, 2509.5, 1334, -267, 1333.5, -373, 536.391, -267, 532.242, -278, 669.172)
+
+[node name="team_left" parent="." instance=ExtResource("4_0d5io")]
+
+[node name="team_right" parent="." instance=ExtResource("4_0d5io")]
+position = Vector2(4040, 1080)
+scale = Vector2(-1, -1)
+team_num = 2

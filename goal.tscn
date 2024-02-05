@@ -8,14 +8,14 @@
 offsets = PackedFloat32Array(0, 0.337607, 0.564103, 0.814815, 1)
 colors = PackedColorArray(0.824219, 1, 0.880524, 1, 0.839401, 0.989438, 0.825002, 1, 0.925944, 0.929231, 0.508514, 1, 1, 0.727478, 0.257813, 1, 1, 0, 0, 1)
 
-[sub_resource type="RectangleShape2D" id="4"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kdt4n"]
 size = Vector2(160, 1828)
 
-[sub_resource type="Curve" id="5"]
+[sub_resource type="Curve" id="Curve_l5urw"]
 _data = [Vector2(0, 0.0193182), 0.0, -0.0491886, 0, 0, Vector2(0.722772, 0.192045), 0.648129, 0.648129, 0, 0, Vector2(0.965347, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0655849, 0.0, 0, 0]
 point_count = 4
 
-[sub_resource type="Animation" id="8"]
+[sub_resource type="Animation" id="Animation_thr1t"]
 length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
@@ -129,7 +129,7 @@ tracks/9/keys = {
 "times": PackedFloat32Array()
 }
 
-[sub_resource type="Animation" id="9"]
+[sub_resource type="Animation" id="Animation_d1jg8"]
 resource_name = "flyout"
 length = 1.5
 tracks/0/type = "bezier"
@@ -224,8 +224,8 @@ tracks/7/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_a1883"]
 _data = {
-"RESET": SubResource("8"),
-"flyout": SubResource("9")
+"RESET": SubResource("Animation_thr1t"),
+"flyout": SubResource("Animation_d1jg8")
 }
 
 [node name="team_left" type="Area2D"]
@@ -234,7 +234,7 @@ gradient = SubResource("7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.25, 0)
-shape = SubResource("4")
+shape = SubResource("RectangleShape2D_kdt4n")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 emitting = false
@@ -249,7 +249,7 @@ spread = 62.75
 gravity = Vector2(0, 0)
 initial_velocity_min = 10.1
 initial_velocity_max = 1000.0
-scale_amount_curve = SubResource("5")
+scale_amount_curve = SubResource("Curve_l5urw")
 
 [node name="speednode" type="Node2D" parent="."]
 scale = Vector2(1e-05, 1e-05)

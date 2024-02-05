@@ -13,7 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+[node name="scoreboard" type="RichTextLabel" parent="."]
 layout_mode = 0
 offset_left = 1634.0
 offset_top = 206.0

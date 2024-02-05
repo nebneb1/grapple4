@@ -19,6 +19,7 @@ config/icon="res://icon.png"
 
 Global="*res://Global.gd"
 Music="*res://music.tscn"
+GlobalClient="*res://Global_Client.gd"
 
 [display]
 

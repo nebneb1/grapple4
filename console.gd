@@ -1,5 +1,6 @@
 extends RichTextLabel
-
+var line_count = 0
+const MAX_LINE_COUNT = 200
 #func _ready():
 	#push("hi!")
 
@@ -23,4 +24,8 @@ func push(item, tag : String = "default"):
 	if tag == "default": out += "[/i]"
 	out += item + "[/color]\n"
 	
-	text = text + out
+	line_count += 1
+	if line_count > MAX_LINE_COUNT:
+		text = text.split("\n", true, 1)[1] + out
+	else:
+		text = text + out

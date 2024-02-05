@@ -1,0 +1,1230 @@
+[gd_scene load_steps=37 format=3 uid="uid://86n3ckp501mr"]
+
+[ext_resource type="Script" path="res://practice_goal.gd" id="1_vsacu"]
+[ext_resource type="Theme" uid="uid://dmxfrq6ph7bvl" path="res://UI.tres" id="2_4mvta"]
+[ext_resource type="PhysicsMaterial" uid="uid://bt3xp6swaa3tm" path="res://main.tres" id="3_uyybq"]
+[ext_resource type="Texture2D" uid="uid://bop5jak8a7jj2" path="res://Untitled2.png" id="4_uad0m"]
+[ext_resource type="Texture2D" uid="uid://clxonn1mw5wp1" path="res://Group 2.png" id="5_p8naq"]
+[ext_resource type="AudioStream" uid="uid://bhlq0e056a811" path="res://TankGameSFX-PURCHASE - Copy.wav" id="5_tb13c"]
+[ext_resource type="Texture2D" uid="uid://boi4xg2u3kni5" path="res://A_black_image.jpeg" id="6_83412"]
+[ext_resource type="FontFile" uid="uid://dqevq6kfanasq" path="res://Koulen-Regular.ttf" id="6_e7yx3"]
+[ext_resource type="Texture2D" uid="uid://c5kox57lcbcdv" path="res://circ.png" id="8_2srhe"]
+[ext_resource type="Gradient" uid="uid://cmwohpkvsofxy" path="res://new_gradient.tres" id="8_saq46"]
+
+[sub_resource type="GDScript" id="GDScript_xlbh6"]
+script/source = "extends Node2D
+
+func _ready():
+	get_node(\"transition\").modulate = Global.color
+	Global.main = self
+	get_tree().paused = true
+	$transition.emitting = true
+	await get_tree().create_timer(1.0).timeout
+	get_tree().paused = false
+"
+
+[sub_resource type="GDScript" id="GDScript_u8e5i"]
+script/source = "extends RichTextLabel
+
+@onready var scores = Global.scores
+
+func _ready():
+	Global.scoreboard = self
+	text = \"[center][color=#\" + str(Global.team_colors[0].to_html()) + \"]\" + str(scores[1]) + \"[/color] - [color=#\" + str(Global.team_colors[1].to_html()) + \"]\" + str(scores[0])
+	
+func update_score(goal_num : int, ammount: int):
+	scores[goal_num-1] += ammount
+	text = \"[center][color=#\" + str(Global.team_colors[0].to_html()) + \"]\" + str(scores[1]) + \"[/color] - [color=#\" + str(Global.team_colors[1].to_html()) + \"]\" + str(scores[0])
+"
+
+[sub_resource type="GDScript" id="GDScript_1uxtk"]
+script/source = "extends RichTextLabel
+
+
+func _process(delta):
+	text = Global.winner
+"
+
+[sub_resource type="GDScript" id="GDScript_ns6lt"]
+script/source = "extends RichTextLabel
+
+
+func _process(delta):
+	if not Global.PRACTICE_MODE:
+		if int(Global.countdown) == -1:
+			if int(Global.time)%60 > 9:
+				text = \"[center]\" + str(int(Global.time/60)) + \" : \" + str(int(Global.time)%60)
+			else:
+				text = \"[center]\" + str(int(Global.time/60)) + \" : 0\" + str(int(Global.time)%60)
+		
+		else:
+			text = \"[center]\" + str(int(Global.countdown))
+	else:
+		text = \"[center]PRACTICE\"
+"
+
+[sub_resource type="GDScript" id="GDScript_mbty1"]
+script/source = "extends RigidBody2D
+
+const radius := 60.0/Global.SCALE
+const MAX_SPEED := 2000.0/Global.SCALE
+var max_speed := 2000.0/Global.SCALE
+var disable := false
+
+var circle_rotation = 0
+var can_hit := false
+var color := Color(0,0,0)
+var hit_color = Color(0.0, 0.75, 0.75, 1)
+var kick_color = Color(0.75, 0.0, 0.75, 1)
+var grav_scale = gravity_scale
+var drawing := true
+var can_kick := false
+
+func _ready():
+	Global.ball = self
+	$CollisionShape2D.shape.radius = radius
+	$CPUParticles2D.scale_amount_min /= Global.SCALE
+	$CPUParticles2D.scale_amount_max /= Global.SCALE
+	$CPUParticles2D2.scale_amount_min /= Global.SCALE 
+	$CPUParticles2D2.scale_amount_max /= Global.SCALE 
+	$CPUParticles2D2.initial_velocity_min /= Global.SCALE
+	$CPUParticles2D2.initial_velocity_max /= Global.SCALE 
+	if not Global.GRAVITY: 
+		linear_damp = Global.BASE_DAMP
+
+
+func _process(delta):
+	if disable: linear_velocity = Vector2.ZERO
+	
+	if Global.GRAVITY:
+		gravity_scale = grav_scale
+	else: gravity_scale = 0
+	
+	if Global.SOCCAR_MODE:
+		if linear_damp > Global.BASE_DAMP:
+			linear_damp -= Global.DAMP_FALLOFF*delta
+	
+#		physics_material_override.absorbent = false
+		can_kick = false
+		for player in Global.players:
+			player[1].max_speed_mult = 1.0
+			if not player[1].hooked:
+				if player[1].global_position.distance_to(global_position) <= player[1].radius + radius + Global.hit_buffer and player[1].kick_delay <= 0:
+					if Global.GRAVITY: gravity_scale = 0
+					player[1].max_speed_mult = 0.7
+					can_kick = true
+#					physics_material_override.absorbent = true
+					linear_damp = Global.NEAR_DAMP
+				
+				elif player[1].global_position.distance_to(global_position) <= player[1].ring_size and player[1].kick_delay <= 0:
+					if Global.GRAVITY: gravity_scale = grav_scale/2
+					player[1].max_speed_mult = 0.875
+					linear_damp = Global.NEAR_DAMP/2
+			
+			
+	
+	$CPUParticles2D.emitting = false
+	if linear_velocity.length() > MAX_SPEED-500/Global.SCALE:
+		$CPUParticles2D.emitting = true
+	
+	if max_speed > MAX_SPEED: 
+		max_speed -= (MAX_SPEED/2)*delta
+		$CPUParticles2D2.emitting = false
+		if linear_velocity.length() > MAX_SPEED*2-1000/Global.SCALE:
+			$CPUParticles2D2.direction = linear_velocity.normalized()
+			$CPUParticles2D2.emitting = true
+		
+	queue_redraw()
+	if not drawing:
+		$CPUParticles2D.emitting = false
+		$CPUParticles2D2.emitting = false
+
+func _physics_process(delta):
+	if linear_velocity.length() > max_speed:
+		apply_central_impulse(-linear_velocity.normalized()*delta*((linear_velocity.length()-max_speed)/100))
+#		color.r += 0.02
+	
+	else:
+		pass
+#		color.r -= 0.005
+	
+	circle_rotation += 1
+	
+
+#to add once i figure out the math
+#func _input(event):
+	#if Global.PRACTICE_MODE:
+		#if event.is_action_pressed(\"pass\"):
+			#var plr = Global.players[0]
+			#var targ = (plr.global_position + plr.velocity*global_position.distance_to(plr.global_position))
+
+func _draw():
+	if drawing:
+		draw_circle(Vector2.ZERO, radius, color)
+		if can_hit:
+			can_hit = false
+			if can_kick and Global.SOCCAR_MODE:
+				for i in range(8):
+					if i%2 == 0:
+						draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation*2), deg_to_rad((i+1)*360.0/8+circle_rotation*2), 10, kick_color, 3, true)
+			else:
+				for i in range(8):
+					if i%2 == 0:
+						draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation), deg_to_rad((i+1)*360.0/8+circle_rotation), 10, hit_color, 3, true)
+				
+			hit_color = Color(0.0, 0.75, 0.75, 1)
+"
+
+[sub_resource type="CircleShape2D" id="1"]
+radius = 60.0
+
+[sub_resource type="Curve" id="3"]
+_data = [Vector2(0, 1), 0.0, -2.97589, 0, 0, Vector2(1, 0), 0.0714141, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="2"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="Curve" id="5"]
+_data = [Vector2(0, 1), 0.0, -1.80172, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="4"]
+offsets = PackedFloat32Array(0, 0.994413, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0.0446928, 1, 0, 0, 0)
+
+[sub_resource type="GDScript" id="GDScript_pxi2w"]
+script/source = "extends CharacterBody2D
+
+@export var player_num := 0
+
+@export var id: int = 4
+@export var team: int = 0
+@export var has_paddle: bool = false
+@export var username := \"Player\"
+
+var max_speed_mult = 1.0
+const max_speed := 8.0/Global.SCALE
+const dash_regen_rate := 2.5
+const max_dashes := 3
+const dash_speed := 30.0*Global.SCALE/1.5
+const ring_size := 400.0*0.85/Global.SCALE
+const PULL_SPEED := 10.0*1.5
+const MAX_HOOKTIME := 2.5
+
+var dashes := 0
+var hooked := false
+var dash_timer = 0.0
+var hook_timer = 0.0
+var vel := Vector2.ZERO
+var colors = [Color(\"#87FFC0\"), Color(\"#A399FF\"), Color(\"#FFAAA1\"), Color(\"#FFF2A8\")]
+var radius := 20.0/Global.SCALE*2
+var accel := 20.0/Global.SCALE
+var ACCEL := accel
+var disabled := true
+var triangle
+
+#special modes
+var kick_delay := 0.0
+@onready var paddle = $paddle
+
+#anims--
+var circle_rotation := 0.0
+const lines = 32.0
+
+
+
+func _ready():
+	disabled = true
+	Global.players.append([player_num, self])
+	
+	$PlayerTagHolder/Tag.text = \"[center][color=\" + Global.team_colors[team].to_html() + \"]\" + username 
+	$PlayerTagHolder.position.y = -radius - 30
+	triangle = PackedVector2Array([Vector2(0, -radius - 10), Vector2(-10, -radius - 20), Vector2(10, -radius - 20)])
+	
+	if has_paddle and Global.PADDLE_BALL:
+		paddle.id = id
+		$paddle/CollisionShape2D/ColorRect.color = Global.team_colors[team]
+#		$paddle/CollisionShape2D2/ColorRect.color = Global.team_colors[team]
+	else:
+		paddle.queue_free()
+
+func _physics_process(delta):
+	if kick_delay > 0:
+		kick_delay -= delta
+	if not disabled:
+		dash_timer += delta
+		if dash_timer >= dash_regen_rate:
+			if dashes < max_dashes:
+				dashes += 1
+			dash_timer = 0.0
+	
+	
+	var dir: Vector2
+	if not disabled:
+		if id == 4:
+			dir.x = int(Input.is_action_pressed(\"right\"))-int(Input.is_action_pressed(\"left\"))
+			dir.y = int(Input.is_action_pressed(\"down\"))-int(Input.is_action_pressed(\"up\"))
+			vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
+		else:
+			dir.x = Input.get_joy_axis(id, 0)
+			dir.y = Input.get_joy_axis(id, 1)
+			if dir.length() > 1.0:
+				vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
+			else:
+				vel = lerp(vel, dir*max_speed, delta*accel)
+		
+	accel = ACCEL
+	if hooked: 
+		accel = ACCEL*3
+		Global.ball.linear_damp = Global.BASE_DAMP
+	
+	if global_position.distance_to(Global.ball.position) <= ring_size+Global.ball.radius and Global.SOCCAR_MODE:
+		Global.ball.can_hit = true
+	
+	if hooked:
+		Global.ball.gravity_scale = 0
+		Global.ball.apply_central_impulse((global_position-Global.ball.global_position)*PULL_SPEED*delta/500)
+		vel += (Global.ball.global_position-global_position)*PULL_SPEED*delta/100
+		
+		hook_timer += delta
+		if global_position.distance_to(Global.ball.position)*Global.SCALE <= radius+Global.ball.radius or hook_timer >= MAX_HOOKTIME: 
+			$hook.pitch_scale = 1.0
+			$hook.play()
+			hooked = false
+		
+		Global.ball.circle_rotation += 5
+		Global.ball.can_hit = true
+		Global.ball.hit_color = Color(0.75, 0.0, 0.0, 1)
+		
+	else:
+		hook_timer = clamp(hook_timer-delta, 0, MAX_HOOKTIME)
+	
+	set_velocity(vel*144*max_speed_mult)
+	move_and_slide()
+	
+	circle_rotation += 0.5
+	queue_redraw()
+
+func _input(event):
+	if event.is_action_pressed(\"dash\") and Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
+			kick_delay = Global.KICK_DELAY
+			
+	elif event.is_action_pressed(\"dash\") and dashes > 0 and (event.device == id or id == 4):
+		dashes -= 1
+		vel = vel.normalized()*dash_speed
+		if hooked:
+			Global.ball.max_speed *= 2
+			vel *= 3
+		dash_timer = 0.0
+	if event.is_action_pressed(\"hook\") and global_position.distance_to(Global.ball.position) <= ring_size+Global.ball.radius and (event.device == id or id == 4) and not (has_paddle and Global.PADDLE_BALL):
+		#exits dribbleing
+		Global.ball.linear_damp = Global.BASE_DAMP
+		if Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
+			kick_delay = Global.KICK_DELAY
+		else:
+			$hook.pitch_scale = 2.0
+			$hook.play()
+			for plr in Global.players:
+				if plr[1].hooked:
+					plr[1].hooked = false
+			hooked = true
+		
+		
+	if event.is_action_released(\"hook\") and (event.device == id or id == 4):
+		if hooked:
+			$hook.pitch_scale = 1.0
+			$hook.play()
+		kick_delay = Global.KICK_DELAY/5.0
+		hooked = false
+
+const DASH_INDICATOR_ROT = 270
+func _draw():
+	draw_colored_polygon(triangle, Color(Global.team_colors[team]))
+	if hooked:
+		draw_line(Vector2.ZERO, Global.ball.global_position-global_position, Global.team_colors[team], 5)
+		# no idea why the number 144 works
+		draw_arc(Vector2.ZERO, radius+40, 0, deg_to_rad(144*(MAX_HOOKTIME-hook_timer)), 128, Color(1, (MAX_HOOKTIME-hook_timer), (MAX_HOOKTIME-hook_timer), 0.5), 2, true)
+		
+	draw_circle(Vector2.ZERO, radius, Global.team_colors[team])
+#	draw_circle(Vector2.ZERO, radius-5/Global.SCALE, colors[player_num])
+	
+	if circle_rotation >= 360: circle_rotation = 0
+	for i in range(lines):
+		if i%2 == 0:
+			draw_arc(Vector2.ZERO, ring_size, deg_to_rad(i*360.0/lines+circle_rotation), deg_to_rad((i+1)*360.0/lines+circle_rotation), 5, Color(Global.team_colors[team].r, Global.team_colors[team].g, Global.team_colors[team].b, 0.25), 3, true)
+	
+	var count = 0
+	for i in range(max_dashes*2):
+		if i%2 == 0:
+			count += 1
+			if count <= dashes:
+				draw_arc(Vector2.ZERO, radius+20, deg_to_rad(i*30/max_dashes*2.0-DASH_INDICATOR_ROT), deg_to_rad((i+1)*30/max_dashes*2.0-DASH_INDICATOR_ROT), 40, Color(0.0, 0, 0), 3, true)
+			
+			
+
+func change_dash(num = 1):
+	if num > 0:
+		pass
+	elif num < 0:
+		pass
+	
+	else: return
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cqapy"]
+radius = 20.0
+
+[sub_resource type="GDScript" id="GDScript_yoglh"]
+script/source = "extends CharacterBody2D
+
+
+@onready var player = get_parent()
+var id = 0 # set by parent
+const ACCEL = 15.0
+const DEADZONE = 0.3
+
+
+#var connected := false
+#var last_rot := 0.0
+
+func _ready():
+	$CollisionShape2D.position.y = -player.ring_size
+	$CollisionShape2D.scale = Vector2(player.ring_size/60.0,player.ring_size/60.0)
+#	$CollisionShape2D2.position.y = +player.ring_size
+#	$CollisionShape2D2.scale = Vector2(player.ring_size/60.0,player.ring_size/60.0)
+
+func _physics_process(delta):
+	if not player.disabled:
+		var aim: Vector2
+		if player.id != 4:
+			aim.x = Input.get_joy_axis(id, 2)
+			aim.y = Input.get_joy_axis(id, 3)
+		else:
+			aim.x = int(Input.is_action_pressed(\"aright\"))-int(Input.is_action_pressed(\"aleft\"))
+			aim.y = int(Input.is_action_pressed(\"adown\"))-int(Input.is_action_pressed(\"aup\"))
+	#	rotation = lerp(rotation, atan2(aim.y, aim.x) + PI/2, delta*ACCEL/2)
+	#	rotation = lerp(rotation, rotation+get_angle_to(aim)*10, delta*ACCEL)
+	#	rotation = atan2(aim.y, aim.x) + PI/2
+	#	print(aim)
+	#	look_at(to_global(aim))
+		aim = aim.normalized()
+		if aim.length() > DEADZONE:
+			rotation = lerp_angle(rotation, atan2(aim.y, aim.x) + PI/2, delta*ACCEL)
+#		if connected and last_rot == rotation:
+#			connected = false
+#			$CollisionShape2D/PinJoint2D.set_node_b(\"\")
+		
+#		last_rot = rotation
+		
+	else:
+		rotation += 5.0*delta
+	
+	
+	
+	
+
+
+#func _on_Area2D_body_entered(body):
+#	if body.is_in_group(\"ball\"):
+#		connected = true
+#		$CollisionShape2D/PinJoint2D.set_node_b(NodePath(body.get_path()))
+#
+#
+#func _on_Area2D_body_exited(body):
+#	if body.is_in_group(\"ball\"):
+#		connected = false
+#		$CollisionShape2D/PinJoint2D.set_node_b(NodePath(\"\"))
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwfai"]
+size = Vector2(6, 40)
+
+[sub_resource type="Theme" id="Theme_kjf66"]
+default_font = ExtResource("6_e7yx3")
+
+[sub_resource type="GDScript" id="GDScript_5216s"]
+script/source = "extends Area2D
+
+@export var gradient: Gradient
+@export var team_num := 1
+
+var can_score := true
+
+func _process(delta):
+	for b in get_overlapping_bodies():
+		if b.is_in_group(\"ball\") and can_score:
+			$CPUParticles2D.modulate = Global.team_colors[abs(team_num-1-1)]
+			#kph
+			$speednode/Speed.text = \"[color=#\"+gradient.sample(clamp((pow(b.linear_velocity.length()*Global.SCALE, 1.25)/131.0)/190.0, 0.0, 1.0)).to_html(false) + \"]\" + str(int(pow(b.linear_velocity.length(), 1.25)/131.0)) + \" KPH!![/color]\"
+			if team_num == 2: $speednode.scale.x = -1
+			$speednode/AnimationPlayer.play(\"flyout\")
+			#other
+			b.drawing = false
+			Global.scoreboard.update_score(team_num, 1)
+			can_score = false
+			$CPUParticles2D.emitting = true
+			Engine.time_scale = 0.5
+			Global.active = false
+			await get_tree().create_timer(1.5).timeout
+			Engine.time_scale = 1
+			Global.players = []
+			Global.active = true
+			Global.color = Global.team_colors[abs(team_num-1-1)]
+			get_tree().reload_current_scene()
+			Global.countdown = 5.0
+			
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kdt4n"]
+size = Vector2(160, 1828)
+
+[sub_resource type="Curve" id="Curve_l5urw"]
+_data = [Vector2(0, 0.0193182), 0.0, -0.0491886, 0, 0, Vector2(0.722772, 0.192045), 0.648129, 0.648129, 0, 0, Vector2(0.965347, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0655849, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Animation" id="8"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:rotation_degrees")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:x")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:position:y")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="Animation" id="9"]
+resource_name = "flyout"
+length = 1.5
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:position:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:rotation_degrees")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_16bxu"]
+_data = {
+"RESET": SubResource("8"),
+"flyout": SubResource("9")
+}
+
+[sub_resource type="Animation" id="Animation_thr1t"]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:rotation_degrees")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:x")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:position:y")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/8/type = "bezier"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".:scale:x")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/9/type = "bezier"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".:scale:y")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="Animation" id="Animation_d1jg8"]
+resource_name = "flyout"
+length = 1.5
+tracks/0/type = "bezier"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Speed:modulate:r")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/1/type = "bezier"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Speed:modulate:g")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/2/type = "bezier"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Speed:modulate:b")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/3/type = "bezier"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Speed:modulate:a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Speed:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/5/type = "bezier"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:position:x")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/6/type = "bezier"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:position:y")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+tracks/7/type = "bezier"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".:rotation_degrees")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"handle_modes": PackedInt32Array(),
+"points": PackedFloat32Array(),
+"times": PackedFloat32Array()
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_a1883"]
+_data = {
+"RESET": SubResource("Animation_thr1t"),
+"flyout": SubResource("Animation_d1jg8")
+}
+
+[sub_resource type="Curve" id="Curve_1y6em"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_66ldi"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Game" type="Node2D"]
+script = SubResource("GDScript_xlbh6")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="scoreboard" type="RichTextLabel" parent="UI"]
+layout_mode = 0
+offset_left = 1634.0
+offset_top = 206.0
+offset_right = 2212.0
+offset_bottom = 507.0
+theme = ExtResource("2_4mvta")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
+bbcode_enabled = true
+text = "1 - 1"
+script = SubResource("GDScript_u8e5i")
+
+[node name="win" type="RichTextLabel" parent="UI"]
+layout_mode = 0
+offset_left = 521.0
+offset_top = 957.0
+offset_right = 3320.0
+offset_bottom = 1258.0
+theme = ExtResource("2_4mvta")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
+bbcode_enabled = true
+script = SubResource("GDScript_1uxtk")
+
+[node name="timer" type="RichTextLabel" parent="UI"]
+layout_mode = 0
+offset_left = 1634.0
+offset_top = 36.0
+offset_right = 2212.0
+offset_bottom = 337.0
+theme = ExtResource("2_4mvta")
+theme_override_colors/default_color = Color(0, 0, 0, 0.501961)
+bbcode_enabled = true
+text = "1 - 1"
+script = SubResource("GDScript_ns6lt")
+
+[node name="Ball" type="RigidBody2D" parent="." groups=["ball"]]
+z_index = 1
+position = Vector2(1920, 1620)
+disable_mode = 2
+mass = 0.00102041
+physics_material_override = ExtResource("3_uyybq")
+gravity_scale = 4.5
+can_sleep = false
+continuous_cd = 2
+max_contacts_reported = 3
+contact_monitor = true
+angular_damp_mode = 1
+constant_torque = 0.2
+script = SubResource("GDScript_mbty1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("1")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Ball"]
+modulate = Color(0, 0, 0, 1)
+z_index = -2
+amount = 360
+fixed_fps = 360
+texture = ExtResource("4_uad0m")
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("3")
+color_ramp = SubResource("2")
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="Ball"]
+z_index = -3
+emitting = false
+amount = 10000
+lifetime = 0.5
+lifetime_randomness = 0.61
+texture = ExtResource("4_uad0m")
+spread = 90.0
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("5")
+color_ramp = SubResource("4")
+
+[node name="PlayerSpawns" type="Node" parent="."]
+
+[node name="o1" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(600, 500)
+
+[node name="o2" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(600, 1660)
+
+[node name="o3" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(500, 1080)
+
+[node name="b1" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3240, 500)
+
+[node name="b2" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3240, 1660)
+
+[node name="b3" type="Marker2D" parent="PlayerSpawns"]
+position = Vector2(3340, 1080)
+
+[node name="player" type="CharacterBody2D" parent="."]
+z_index = -1
+position = Vector2(600, 500)
+disable_mode = 2
+collision_layer = 3
+collision_mask = 2
+motion_mode = 1
+wall_min_slide_angle = 3.14159
+platform_on_leave = 2
+script = SubResource("GDScript_pxi2w")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player"]
+shape = SubResource("CircleShape2D_cqapy")
+
+[node name="hook" type="AudioStreamPlayer" parent="player"]
+stream = ExtResource("5_tb13c")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="hook2" type="AudioStreamPlayer" parent="player"]
+stream = ExtResource("5_tb13c")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="paddle" type="CharacterBody2D" parent="player"]
+script = SubResource("GDScript_yoglh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="player/paddle"]
+z_index = -1
+shape = SubResource("RectangleShape2D_hwfai")
+
+[node name="ColorRect" type="ColorRect" parent="player/paddle/CollisionShape2D"]
+show_behind_parent = true
+offset_left = -3.0
+offset_top = -20.0
+offset_right = 3.0
+offset_bottom = 20.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayerTagHolder" type="Node2D" parent="player"]
+
+[node name="Tag" type="RichTextLabel" parent="player/PlayerTagHolder"]
+offset_left = -84.0
+offset_top = -14.0
+offset_right = 87.0
+offset_bottom = 16.0
+theme = SubResource("Theme_kjf66")
+bbcode_enabled = true
+text = "[center]Player"
+
+[node name="walls" type="Node2D" parent="."]
+scale = Vector2(2, 2)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="walls"]
+collision_layer = 3
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="walls/StaticBody2D"]
+position = Vector2(-0.5, 37.9187)
+scale = Vector2(1, 0.964)
+polygon = PackedVector2Array(1, 674.358, 43.5, 710.665, 43.5, 723.5, 43.5, 794.172, 45.5, 805.064, 48.5, 811.288, 51, 814.918, 57, 821.143, 297.5, 1047.5, 301.5, 1050.5, 305.5, 1052.5, 311, 1054.5, 318.5, 1055.5, 325.5, 1056.5, 1591.5, 1056.5, 1608.5, 1055, 1613.5, 1053.5, 1622.5, 1048.5, 1867.5, 818.03, 1872, 812.325, 1875, 806.101, 1876.5, 801.952, 1877.5, 793.653, 1877.5, 710.665, 1920.5, 674.358, 2159, 685, 2159.5, 355.5, 1920.5, 368.342, 1877.5, 330.997, 1877.5, 251.122, 1876, 238.155, 1873, 230.894, 1869, 224.669, 1623.5, -6.5, 1619, -9.5, 1614, -12, 1607.5, -14, 1601.5, -15, 1595, -15.5, 326.5, -15.5, 311.5, -14, 305.5, -11.5, 301.5, -9.5, 298, -6.5, 298, -6.5, 292, -1.5, 54, 222.595, 50, 227.782, 47, 233.487, 45, 237.636, 43.5, 242.5, 43.5, 330.479, 0.5, 367.304, -252.5, 373.01, -267.5, 527.574, -374.5, 532.761, -171, -124, 2495.5, -145, 2509.5, 1334, -267, 1333.5, -373, 536.391, -267, 532.242, -278, 669.172)
+
+[node name="Sprite2D" type="Sprite2D" parent="walls"]
+z_index = -4
+position = Vector2(960, 540)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_p8naq")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(1920, 1080)
+scale = Vector2(0.91, 0.91)
+zoom = Vector2(0.5, 0.5)
+
+[node name="ABlackImage" type="Sprite2D" parent="Camera2D"]
+visible = false
+position = Vector2(-0.000215888, 1420.5)
+scale = Vector2(6, 1.43125)
+texture = ExtResource("6_83412")
+
+[node name="ABlackImage2" type="Sprite2D" parent="Camera2D"]
+visible = false
+position = Vector2(0, -1423)
+scale = Vector2(6, 1.43125)
+texture = ExtResource("6_83412")
+
+[node name="team_left" type="Area2D" parent="."]
+position = Vector2(-200, 1080)
+script = SubResource("GDScript_5216s")
+gradient = ExtResource("8_saq46")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="team_left"]
+position = Vector2(-0.25, 0)
+shape = SubResource("RectangleShape2D_kdt4n")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="team_left"]
+emitting = false
+amount = 1000
+lifetime = 8.0
+one_shot = true
+speed_scale = 4.0
+explosiveness = 1.0
+lifetime_randomness = 0.46
+texture = ExtResource("8_2srhe")
+spread = 62.75
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.1
+initial_velocity_max = 1000.0
+scale_amount_curve = SubResource("Curve_l5urw")
+
+[node name="speednode" type="Node2D" parent="team_left"]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Speed" type="RichTextLabel" parent="team_left/speednode"]
+modulate = Color(0, 0, 0, 0)
+offset_left = -196.129
+offset_top = -156.556
+offset_right = 571.871
+offset_bottom = 187.444
+theme = ExtResource("2_4mvta")
+bbcode_enabled = true
+text = "asdfads"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="team_left/speednode"]
+libraries = {
+"": SubResource("AnimationLibrary_16bxu")
+}
+
+[node name="team_right" type="Area2D" parent="."]
+position = Vector2(4040, 1080)
+scale = Vector2(-1, 1)
+script = ExtResource("1_vsacu")
+gradient = ExtResource("8_saq46")
+team_num = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="team_right"]
+position = Vector2(-0.25, 0)
+shape = SubResource("RectangleShape2D_kdt4n")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="team_right"]
+emitting = false
+amount = 1000
+lifetime = 8.0
+one_shot = true
+speed_scale = 4.0
+explosiveness = 1.0
+lifetime_randomness = 0.46
+texture = ExtResource("8_2srhe")
+spread = 62.75
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.1
+initial_velocity_max = 1000.0
+scale_amount_curve = SubResource("Curve_l5urw")
+
+[node name="speednode" type="Node2D" parent="team_right"]
+scale = Vector2(1e-05, 1e-05)
+
+[node name="Speed" type="RichTextLabel" parent="team_right/speednode"]
+modulate = Color(0, 0, 0, 0)
+offset_left = -196.129
+offset_top = -156.556
+offset_right = 571.871
+offset_bottom = 187.444
+theme = ExtResource("2_4mvta")
+bbcode_enabled = true
+text = "asdfads"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="team_right/speednode"]
+libraries = {
+"": SubResource("AnimationLibrary_a1883")
+}
+
+[node name="transition" type="CPUParticles2D" parent="."]
+process_mode = 3
+z_index = 10
+position = Vector2(1920, 1080)
+emitting = false
+amount = 100
+lifetime = 2.0
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource("8_2srhe")
+emission_shape = 3
+emission_rect_extents = Vector2(1920, 1080)
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_1y6em")
+
+[node name="transitionout" type="CPUParticles2D" parent="."]
+process_mode = 3
+modulate = Color(0, 0, 0, 1)
+z_index = 10
+position = Vector2(1920, 1080)
+emitting = false
+amount = 100
+lifetime = 4.0
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.25
+texture = ExtResource("8_2srhe")
+emission_shape = 2
+emission_sphere_radius = 1.0
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("Curve_66ldi")

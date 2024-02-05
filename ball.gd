@@ -106,3 +106,4 @@ func _draw():
 						draw_arc(Vector2.ZERO, radius+10, deg_to_rad(i*360.0/8+circle_rotation), deg_to_rad((i+1)*360.0/8+circle_rotation), 10, hit_color, 3, true)
 				
 			hit_color = Color(0.0, 0.75, 0.75, 1)
+

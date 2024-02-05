@@ -1,17 +1,3 @@
 res://default_env.tres
-res://pregame.tscn
-res://UI.tres
-res://comand.gd
-res://server.gd
-res://main.tscn
-res://Ball.tscn
-res://player.tscn
-res://UI.tscn
-res://volley.tscn
-res://goal.tscn
-res://playerServerInstance.tscn
-res://console.gd
-res://menu.gd
-res://console.tscn
-res://menu.tscn
-res://Global.gd
+res://main_client - Copy.tscn
+res://main_practice.tscn

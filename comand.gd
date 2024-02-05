@@ -49,7 +49,6 @@ func run_cmd(cmd : Array):
 			server_started = true
 		
 		"qlist":
-			get_parent().rpc_id(get_parent().player_queue[0][0], "initial_ping")
 			if !server_started: push("Server not started", "alert")
 			elif get_parent().player_queue.size() == 0: push("No players connected", "alert")
 			

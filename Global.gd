@@ -2,7 +2,7 @@ extends Node
 
 const team_colors = [Color(1, 0.5,0), Color(0, 0.5, 1)]
 
-#var regen : Node
+#var regen : Nod
 var main: Node2D
 var color : Color = Color(0,0,0)
 var ball : RigidBody2D
@@ -56,14 +56,14 @@ func _process(delta):
 			for player in players: player[1].disabled = true
 			if scores[0] > scores[1]:
 				winner = "[center][color=#"+ str(team_colors[1].to_html()) +"]Blue Wins!"
-				main.get_node("transitionout").modulate = team_colors[1].to_html()
+				#main.get_node("transitionout").modulate = team_colors[1].to_html()
 			elif scores[1] > scores[0]:
 				winner = "[center][color=#"+ str(team_colors[0].to_html()) +"]Orange Wins!"
-				main.get_node("transitionout").modulate = team_colors[0].to_html()
+				#main.get_node("transitionout").modulate = team_colors[0].to_html()
 			else:
 				winner = "[center]DRAW!\nthis really should have a match point system but i havnt programed that yet lol"
 				
-			main.get_node("transitionout").emitting = true
+			#main.get_node("transitionout").emitting = true
 			await get_tree().create_timer(3.0).timeout
 			players = []	
 			scores = [0, 0]

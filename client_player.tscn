@@ -1,0 +1,306 @@
+[gd_scene load_steps=8 format=3 uid="uid://cgm04yghbh0a5"]
+
+[ext_resource type="AudioStream" uid="uid://bhlq0e056a811" path="res://TankGameSFX-PURCHASE - Copy.wav" id="2_umdlq"]
+[ext_resource type="FontFile" uid="uid://dqevq6kfanasq" path="res://Koulen-Regular.ttf" id="4_nq6o7"]
+
+[sub_resource type="GDScript" id="GDScript_rva3n"]
+script/source = "extends CharacterBody2D
+
+@export var player_num := 0
+
+@export var id: int = 4
+@export var team: int = 0
+@export var has_paddle: bool = false
+@export var username := \"Player\"
+
+var max_speed_mult = 1.0
+const max_speed := 8.0/Global.SCALE
+const dash_regen_rate := 2.5
+const max_dashes := 3
+const dash_speed := 30.0*Global.SCALE/1.5
+const ring_size := 400.0*0.85/Global.SCALE
+const PULL_SPEED := 10.0*1.5
+const MAX_HOOKTIME := 2.5
+
+var dashes := 0
+var hooked := false
+var dash_timer = 0.0
+var hook_timer = 0.0
+var vel := Vector2.ZERO
+var colors = [Color(\"#87FFC0\"), Color(\"#A399FF\"), Color(\"#FFAAA1\"), Color(\"#FFF2A8\")]
+var radius := 20.0/Global.SCALE*2
+var accel := 20.0/Global.SCALE
+var ACCEL := accel
+var disabled := true
+var triangle
+
+#special modes
+var kick_delay := 0.0
+@onready var paddle = $paddle
+
+#anims--
+var circle_rotation := 0.0
+const lines = 32.0
+
+
+
+func _ready():
+	disabled = true
+	Global.players.append([player_num, self])
+	
+	$PlayerTagHolder/Tag.text = \"[center][color=\" + Global.team_colors[team].to_html() + \"]\" + username 
+	$PlayerTagHolder.position.y = -radius - 30
+	triangle = PackedVector2Array([Vector2(0, -radius - 10), Vector2(-10, -radius - 20), Vector2(10, -radius - 20)])
+	
+	if has_paddle and Global.PADDLE_BALL:
+		paddle.id = id
+		$paddle/CollisionShape2D/ColorRect.color = Global.team_colors[team]
+#		$paddle/CollisionShape2D2/ColorRect.color = Global.team_colors[team]
+	else:
+		paddle.queue_free()
+
+func _physics_process(delta):
+	if kick_delay > 0:
+		kick_delay -= delta
+	if not disabled:
+		dash_timer += delta
+		if dash_timer >= dash_regen_rate:
+			if dashes < max_dashes:
+				dashes += 1
+			dash_timer = 0.0
+	
+	
+	var dir: Vector2
+	if not disabled:
+		if id == 4:
+			dir.x = int(Input.is_action_pressed(\"right\"))-int(Input.is_action_pressed(\"left\"))
+			dir.y = int(Input.is_action_pressed(\"down\"))-int(Input.is_action_pressed(\"up\"))
+			vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
+		else:
+			dir.x = Input.get_joy_axis(id, 0)
+			dir.y = Input.get_joy_axis(id, 1)
+			if dir.length() > 1.0:
+				vel = lerp(vel, dir.normalized()*max_speed, delta*accel)
+			else:
+				vel = lerp(vel, dir*max_speed, delta*accel)
+		
+	accel = ACCEL
+	if hooked: 
+		accel = ACCEL*3
+		Global.ball.linear_damp = Global.BASE_DAMP
+	
+	if global_position.distance_to(Global.ball.position) <= ring_size+Global.ball.radius and Global.SOCCAR_MODE:
+		Global.ball.can_hit = true
+	
+	if hooked:
+		Global.ball.gravity_scale = 0
+		Global.ball.apply_central_impulse((global_position-Global.ball.global_position)*PULL_SPEED*delta/500)
+		vel += (Global.ball.global_position-global_position)*PULL_SPEED*delta/100
+		
+		hook_timer += delta
+		if global_position.distance_to(Global.ball.position)*Global.SCALE <= radius+Global.ball.radius or hook_timer >= MAX_HOOKTIME: 
+			$hook.pitch_scale = 1.0
+			$hook.play()
+			hooked = false
+		
+		Global.ball.circle_rotation += 5
+		Global.ball.can_hit = true
+		Global.ball.hit_color = Color(0.75, 0.0, 0.0, 1)
+		
+	else:
+		hook_timer = clamp(hook_timer-delta, 0, MAX_HOOKTIME)
+	
+	set_velocity(vel*144*max_speed_mult)
+	move_and_slide()
+	
+	circle_rotation += 0.5
+	queue_redraw()
+
+func _input(event):
+	if event.is_action_pressed(\"dash\") and Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
+			kick_delay = Global.KICK_DELAY
+			
+	elif event.is_action_pressed(\"dash\") and dashes > 0 and (event.device == id or id == 4):
+		dashes -= 1
+		vel = vel.normalized()*dash_speed
+		if hooked:
+			Global.ball.max_speed *= 2
+			vel *= 3
+		dash_timer = 0.0
+	if event.is_action_pressed(\"hook\") and global_position.distance_to(Global.ball.position) <= ring_size+Global.ball.radius and (event.device == id or id == 4) and not (has_paddle and Global.PADDLE_BALL):
+		#exits dribbleing
+		Global.ball.linear_damp = Global.BASE_DAMP
+		if Global.SOCCAR_MODE and global_position.distance_to(Global.ball.global_position) <= radius + Global.ball.radius + Global.hit_buffer:
+			Global.ball.apply_impulse(global_position.direction_to(Global.ball.global_position)*Global.hit_power, Vector2.ZERO)
+			kick_delay = Global.KICK_DELAY
+		else:
+			$hook.pitch_scale = 2.0
+			$hook.play()
+			for plr in Global.players:
+				if plr[1].hooked:
+					plr[1].hooked = false
+			hooked = true
+		
+		
+	if event.is_action_released(\"hook\") and (event.device == id or id == 4):
+		if hooked:
+			$hook.pitch_scale = 1.0
+			$hook.play()
+		kick_delay = Global.KICK_DELAY/5.0
+		hooked = false
+
+const DASH_INDICATOR_ROT = 270
+func _draw():
+	draw_colored_polygon(triangle, Color(Global.team_colors[team]))
+	if hooked:
+		draw_line(Vector2.ZERO, Global.ball.global_position-global_position, Global.team_colors[team], 5)
+		# no idea why the number 144 works
+		draw_arc(Vector2.ZERO, radius+40, 0, deg_to_rad(144*(MAX_HOOKTIME-hook_timer)), 128, Color(1, (MAX_HOOKTIME-hook_timer), (MAX_HOOKTIME-hook_timer), 0.5), 2, true)
+		
+	draw_circle(Vector2.ZERO, radius, Global.team_colors[team])
+#	draw_circle(Vector2.ZERO, radius-5/Global.SCALE, colors[player_num])
+	
+	if circle_rotation >= 360: circle_rotation = 0
+	for i in range(lines):
+		if i%2 == 0:
+			draw_arc(Vector2.ZERO, ring_size, deg_to_rad(i*360.0/lines+circle_rotation), deg_to_rad((i+1)*360.0/lines+circle_rotation), 5, Color(Global.team_colors[team].r, Global.team_colors[team].g, Global.team_colors[team].b, 0.25), 3, true)
+	
+	var count = 0
+	for i in range(max_dashes*2):
+		if i%2 == 0:
+			count += 1
+			if count <= dashes:
+				draw_arc(Vector2.ZERO, radius+20, deg_to_rad(i*30/max_dashes*2.0-DASH_INDICATOR_ROT), deg_to_rad((i+1)*30/max_dashes*2.0-DASH_INDICATOR_ROT), 40, Color(0.0, 0, 0), 3, true)
+			
+			
+
+func change_dash(num = 1):
+	if num > 0:
+		pass
+	elif num < 0:
+		pass
+	
+	else: return
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cqapy"]
+radius = 20.0
+
+[sub_resource type="GDScript" id="GDScript_vodkn"]
+script/source = "extends CharacterBody2D
+
+
+@onready var player = get_parent()
+var id = 0 # set by parent
+const ACCEL = 15.0
+const DEADZONE = 0.3
+
+
+#var connected := false
+#var last_rot := 0.0
+
+func _ready():
+	$CollisionShape2D.position.y = -player.ring_size
+	$CollisionShape2D.scale = Vector2(player.ring_size/60.0,player.ring_size/60.0)
+#	$CollisionShape2D2.position.y = +player.ring_size
+#	$CollisionShape2D2.scale = Vector2(player.ring_size/60.0,player.ring_size/60.0)
+
+func _physics_process(delta):
+	if not player.disabled:
+		var aim: Vector2
+		if player.id != 4:
+			aim.x = Input.get_joy_axis(id, 2)
+			aim.y = Input.get_joy_axis(id, 3)
+		else:
+			aim.x = int(Input.is_action_pressed(\"aright\"))-int(Input.is_action_pressed(\"aleft\"))
+			aim.y = int(Input.is_action_pressed(\"adown\"))-int(Input.is_action_pressed(\"aup\"))
+	#	rotation = lerp(rotation, atan2(aim.y, aim.x) + PI/2, delta*ACCEL/2)
+	#	rotation = lerp(rotation, rotation+get_angle_to(aim)*10, delta*ACCEL)
+	#	rotation = atan2(aim.y, aim.x) + PI/2
+	#	print(aim)
+	#	look_at(to_global(aim))
+		aim = aim.normalized()
+		if aim.length() > DEADZONE:
+			rotation = lerp_angle(rotation, atan2(aim.y, aim.x) + PI/2, delta*ACCEL)
+#		if connected and last_rot == rotation:
+#			connected = false
+#			$CollisionShape2D/PinJoint2D.set_node_b(\"\")
+		
+#		last_rot = rotation
+		
+	else:
+		rotation += 5.0*delta
+	
+	
+	
+	
+
+
+#func _on_Area2D_body_entered(body):
+#	if body.is_in_group(\"ball\"):
+#		connected = true
+#		$CollisionShape2D/PinJoint2D.set_node_b(NodePath(body.get_path()))
+#
+#
+#func _on_Area2D_body_exited(body):
+#	if body.is_in_group(\"ball\"):
+#		connected = false
+#		$CollisionShape2D/PinJoint2D.set_node_b(NodePath(\"\"))
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwfai"]
+size = Vector2(6, 40)
+
+[sub_resource type="Theme" id="Theme_kjf66"]
+default_font = ExtResource("4_nq6o7")
+
+[node name="player" type="CharacterBody2D"]
+disable_mode = 2
+collision_layer = 3
+collision_mask = 2
+motion_mode = 1
+wall_min_slide_angle = 3.14159
+platform_on_leave = 2
+script = SubResource("GDScript_rva3n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_cqapy")
+
+[node name="hook" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_umdlq")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="hook2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_umdlq")
+volume_db = -1.821
+pitch_scale = 2.09
+bus = &"sfx"
+
+[node name="paddle" type="CharacterBody2D" parent="."]
+script = SubResource("GDScript_vodkn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paddle"]
+z_index = -1
+shape = SubResource("RectangleShape2D_hwfai")
+
+[node name="ColorRect" type="ColorRect" parent="paddle/CollisionShape2D"]
+show_behind_parent = true
+offset_left = -3.0
+offset_top = -20.0
+offset_right = 3.0
+offset_bottom = 20.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayerTagHolder" type="Node2D" parent="."]
+
+[node name="Tag" type="RichTextLabel" parent="PlayerTagHolder"]
+offset_left = -84.0
+offset_top = -14.0
+offset_right = 87.0
+offset_bottom = 16.0
+theme = SubResource("Theme_kjf66")
+bbcode_enabled = true
+text = "[center]Player"
